@@ -2,6 +2,7 @@ import pygame
 import math
 import random
 import time
+import threading
 
 rand = random.uniform
 root = math.sqrt
@@ -396,6 +397,7 @@ for i in range(20):
 running = True
 
 #main
+
 while running:
     starttime = time.time()
     water()
@@ -405,13 +407,15 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 running = False
+            elif event.key == pygame.K_ESCAPE:
+                running = False
 
     for animal in animals:
         animal.collision()
         animal.clearmates()
         animal.findtarget()
 
-
+    for animal in animals:
         animal.draw()
         animal.age += 1
         animal.hung += 2
