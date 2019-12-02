@@ -2,7 +2,17 @@ import pygame
 import math
 import random
 import time
-import threading
+import numpy.polynomial.polynomial as poly
+import numpy
+import matplotlib.pyplot as plt
+import argparse
+
+#using argparse to get the information about language, folder and text from CLI
+parser = argparse.ArgumentParser("")
+parser.add_argument('-s', dest='silent', action='store_true', default=False, help="run in silent mode")
+parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
+
+args = parser.parse_args()
 
 rand = random.uniform
 root = math.sqrt
@@ -11,20 +21,32 @@ global animals
 animals = []
 global plants
 plants = []
-global waters
-waters = []
+# global waters
+# waters = []
+global counter
+counter = 0
+global x
+global speed
+global rabbitCount
+global foxCount
+x = []
+speed = []
+rabbitCount = []
+foxCount = []
 
-dsize = (1850, 990)
-pygame.init()
-win = pygame.display.set_mode(dsize)
+if not args.silent:
+    dsize = (1850, 990)
+    pygame.init()
+    win = pygame.display.set_mode(dsize)
 
-def water():
-    waters.append([[120, 70], [80, 60]])
-    waters.append([[1200, 700], [80, 60]])
-    waters.append([[520, 870], [100, 40]])
-    waters.append([[720, 200], [400, 700]])
-    for water in waters:
-        pygame.draw.rect(win, (0, 0, 255), (water[0][0], water[0][1], water[1][0], water[1][1]))
+# def water():
+#     waters.append([[120, 70], [80, 60]])
+#     waters.append([[1200, 700], [80, 60]])
+#     waters.append([[520, 870], [100, 40]])
+#     waters.append([[720, 200], [400, 700]])
+#     if not args.silent:
+#         for water in waters:
+#             pygame.draw.rect(win, (0, 0, 255), (water[0][0], water[0][1], water[1][0], water[1][1]))
 
 
 def genplants():
@@ -32,36 +54,37 @@ def genplants():
     y = rand(20, 970)
     ax = x + 10
     ay = y + 10
-    for water in waters:
-        lbor = water[0][0]
-        rbor = water[0][0] + water[1][0]
-        tbor = water[0][1]
-        bbor = water[0][1] + water[1][1]
-        hborders = [tbor, bbor]
-        vborders = [lbor, rbor]
-        if ax >= water[0][0] and x <= water[0][0] + water[1][0]:
-            if ay >= water[0][1] and y <= water[0][1] + water[1][1]:
-                closest = [568656, None]
+    # for water in waters:
+    #     lbor = water[0][0]
+    #     rbor = water[0][0] + water[1][0]
+    #     tbor = water[0][1]
+    #     bbor = water[0][1] + water[1][1]
+    #     hborders = [tbor, bbor]
+    #     vborders = [lbor, rbor]
+    #     if ax >= water[0][0] and x <= water[0][0] + water[1][0]:
+    #         if ay >= water[0][1] and y <= water[0][1] + water[1][1]:
+    #             closest = [568656, None]
 
-                for i in range(len(vborders)):
-                    if abs(vborders[i] - x) < closest[0]:
-                        closest = [abs(vborders[i] - x), i]
+    #             for i in range(len(vborders)):
+    #                 if abs(vborders[i] - x) < closest[0]:
+    #                     closest = [abs(vborders[i] - x), i]
 
-                for i in range(len(hborders)):
-                    if abs(hborders[i] - y) < closest[0]:
-                        closest = [abs(hborders[i] - y), i + 2]
+    #             for i in range(len(hborders)):
+    #                 if abs(hborders[i] - y) < closest[0]:
+    #                     closest = [abs(hborders[i] - y), i + 2]
 
-                if closest[1] == 0:
-                    x = water[0][0] -10
-                if closest[1] == 1:
-                    x = water[0][0] + water[1][0]
-                if closest[1] == 2: 
-                    y = water[0][1] - 10
-                if closest[1] == 3:
-                    y = water[0][1] + water[1][1]
+    #             if closest[1] == 0:
+    #                 x = water[0][0] -10
+    #             if closest[1] == 1:
+    #                 x = water[0][0] + water[1][0]
+    #             if closest[1] == 2: 
+    #                 y = water[0][1] - 10
+    #             if closest[1] == 3:
+    #                 y = water[0][1] + water[1][1]
     plants.append([x, y])
 
-    drawplants()
+    if not args.silent:
+        drawplants()
 
 def drawplants():
     for plant in plants:
@@ -114,33 +137,33 @@ class Animal:
         ax = self.pos[0] + 10
         ay = self.pos[1] + 10
         
-        for water in waters:
-            lbor = water[0][0]
-            rbor = water[0][0] + water[1][0]
-            tbor = water[0][1]
-            bbor = water[0][1] + water[1][1]
-            hborders = [tbor, bbor]
-            vborders = [lbor, rbor]
-            if ax >= water[0][0] and self.pos[0] <= water[0][0] + water[1][0]:
-                if ay >= water[0][1] and self.pos[1] <= water[0][1] + water[1][1]:
-                    closest = [568656, None]
+        # for water in waters:
+        #     lbor = water[0][0]
+        #     rbor = water[0][0] + water[1][0]
+        #     tbor = water[0][1]
+        #     bbor = water[0][1] + water[1][1]
+        #     hborders = [tbor, bbor]
+        #     vborders = [lbor, rbor]
+        #     if ax >= water[0][0] and self.pos[0] <= water[0][0] + water[1][0]:
+        #         if ay >= water[0][1] and self.pos[1] <= water[0][1] + water[1][1]:
+        #             closest = [568656, None]
 
-                    for i in range(len(vborders)):
-                        if abs(vborders[i] - self.pos[0]) < closest[0]:
-                            closest = [abs(vborders[i] - self.pos[0]), i]
+        #             for i in range(len(vborders)):
+        #                 if abs(vborders[i] - self.pos[0]) < closest[0]:
+        #                     closest = [abs(vborders[i] - self.pos[0]), i]
 
-                    for i in range(len(hborders)):
-                        if abs(hborders[i] - self.pos[1]) < closest[0]:
-                            closest = [abs(hborders[i] - self.pos[1]), i + 2]
+        #             for i in range(len(hborders)):
+        #                 if abs(hborders[i] - self.pos[1]) < closest[0]:
+        #                     closest = [abs(hborders[i] - self.pos[1]), i + 2]
 
-                    if closest[1] == 0:
-                        self.pos[0] = water[0][0] -10
-                    if closest[1] == 1:
-                        self.pos[0] = water[0][0] + water[1][0]
-                    if closest[1] == 2:
-                        self.pos[1] = water[0][1] - 10
-                    if closest[1] == 3:
-                        self.pos[1] = water[0][1] + water[1][1]
+        #             if closest[1] == 0:
+        #                 self.pos[0] = water[0][0] -10
+        #             if closest[1] == 1:
+        #                 self.pos[0] = water[0][0] + water[1][0]
+        #             if closest[1] == 2:
+        #                 self.pos[1] = water[0][1] - 10
+        #             if closest[1] == 3:
+        #                 self.pos[1] = water[0][1] + water[1][1]
     def movetargeted(self):
         if self.target in animals:
 
@@ -289,7 +312,7 @@ class Rabbit(Animal):
     def findtarget(self):
         food = []
         mate = []
-        drinks = []
+        # drinks = []
         self.targets = [None]*3
         d = True
         
@@ -316,15 +339,15 @@ class Rabbit(Animal):
         else:
             self.targets[1] = None
 
-        for water in waters:
-            x = self.waterdistance(water)
-            if x[0] <= self.sens:
-                d = False
-                drinks.append(water)
-        if len(drinks) != 0:
-            self.targets[2] = self.findclosest(x[1])
-        else:
-            self.targets[2] = None
+        # for water in waters:
+        #     x = self.waterdistance(water)
+        #     if x[0] <= self.sens:
+        #         d = False
+        #         drinks.append(water)
+        # if len(drinks) != 0:
+        #     self.targets[2] = self.findclosest(x[1])
+        # else:
+        #     self.targets[2] = None
 
 
 
@@ -384,7 +407,7 @@ class Fox(Animal):
         else:
             self.movetargeted()
 
-water()
+# water()
 
 for i in range(20):
     genplants()
@@ -398,6 +421,7 @@ running = True
 
 while running:
     starttime = time.time()
+<<<<<<< HEAD
     water()
     #check for break
     events = pygame.event.get()
@@ -408,6 +432,19 @@ while running:
             elif event.key == pygame.K_ESCAPE:
                 running = False
     #loop through al animals
+=======
+    if not args.silent:
+        # water()
+        #check for break
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    running = False
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
+
+>>>>>>> d018beabfc95be9a5c3e053ed8205a870bf7e1f1
     for animal in animals:
         animal.collision()
         animal.clearmates()
@@ -415,15 +452,64 @@ while running:
 
     # draw and adjust timedependant variables
     for animal in animals:
-        animal.draw()
+        if not args.silent:
+            animal.draw()
         animal.age += 1
         animal.hung += 2
 #        animal.thurst += 3
         animal.sexd += 4
+<<<<<<< HEAD
 
     #draw plants and update display
     drawplants()
     pygame.display.update()
     win.fill((0, 255, 0))
+=======
+    if not args.silent:
+        drawplants()
+        pygame.display.update()
+        win.fill((0, 255, 0))
+>>>>>>> d018beabfc95be9a5c3e053ed8205a870bf7e1f1
     endtime = time.time()
-    print endtime - starttime
+
+    import timeit
+
+    foxcounter = 0
+    rabbitcounter = 0
+    for animal in animals:
+        if isinstance(animal, Rabbit):
+            rabbitcounter += 1
+        elif isinstance(animal, Fox):
+            foxcounter += 1
+        else:
+            print animal.__class__.__name__
+    counter += 1
+    print str(endtime - starttime) + " " + str(counter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants))
+    if(len(speed) != 0):
+        if (endtime - starttime)*1000 > speed[-1]*3 and speed[-1] != 0 and (endtime - starttime)*1000 > 500:
+            speed.append(speed[-1])
+        else:
+            speed.append((endtime - starttime)*1000)
+    else:
+        speed.append((endtime - starttime)*1000)
+    x.append(counter)
+    rabbitCount.append(rabbitcounter)
+    foxCount.append(foxcounter)
+
+    if counter == int(args.dayCount):
+        running = False
+        fig, ax1 = plt.subplots()
+        ax1.set_xlabel('time (d)')
+        ax1.set_ylabel('time taken (ms)', color='tab:red')
+        ax1.plot(x, speed, color = 'tab:red')
+        ax1.tick_params(axis='y', labelcolor='tab:red')
+        
+        ax2 = ax1.twinx()
+
+        ax2.set_ylabel('rabbitcount', color='tab:blue')
+        ax2.plot(x, rabbitCount, color = 'tab:blue')
+        ax2.plot(x, foxCount, color = 'tab:green')
+        ax2.tick_params(axis='y', labelcolor='tab:blue')
+
+        fig.tight_layout()
+        plt.show()
