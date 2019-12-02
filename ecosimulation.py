@@ -1,18 +1,24 @@
-import pygame
-import math
-import random
-import time
-import numpy.polynomial.polynomial as poly
-import numpy
-import matplotlib.pyplot as plt
 import argparse
 
 #using argparse to get the information about language, folder and text from CLI
 parser = argparse.ArgumentParser("")
 parser.add_argument('-s', dest='silent', action='store_true', default=False, help="run in silent mode")
+parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish')
+parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
+parser.add_argument('-pc', dest='plantCount', action='store', default=20, help='set the initial amount of plants')
+parser.add_argument('-rc', dest='rabbitCount', action='store', default=20, help='set the initial amount of rabbits')
+parser.add_argument('-fc', dest='foxCount', action='store', default=20, help='set the initial amount of foxes')
 
 args = parser.parse_args()
+
+import pygame
+import math
+import random
+import time
+import matplotlib.pyplot as plt
+import os
+import sys
 
 rand = random.uniform
 root = math.sqrt
@@ -411,9 +417,11 @@ class Fox(Animal):
 
 # water()
 
-for i in range(20):
+for i in range(int(args.plantCount)):
     genplants()
+for i in range(int(args.rabbitCount)):
     animals.append(Rabbit([rand(20, 1780), rand(20, 970)]))
+# for i in range(args.foxCount):
     #animals.append(Fox([rand(20, 1780), rand(20, 970)]))
 
 
@@ -493,3 +501,7 @@ while running:
 
         fig.tight_layout()
         plt.show()
+        if args.repeat:
+            sys.stdout.flush()
+            print(type(sys.argv[1:]))
+            os.execv(os.path.dirname(os.path.realpath(__file__)) + "\\" + __file__, sys.argv[1:])
