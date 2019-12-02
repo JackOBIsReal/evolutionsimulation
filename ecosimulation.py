@@ -128,7 +128,7 @@ class Animal:
         self.collision()
 
     def collision(self):
-
+        #check borders of map
         if self.pos[0] < 20:
             self.pos[0] = 20
         
@@ -138,7 +138,8 @@ class Animal:
             self.pos[0] = 1780
         if self.pos[1] > 970:
             self.pos[1] = 970
-
+        #check water
+        #warning
         ax = self.pos[0] + 10
         ay = self.pos[1] + 10
         
@@ -174,9 +175,6 @@ class Animal:
 
             dx = self.target.pos[0] - self.pos[0]
             dy = self.target.pos[1] - self.pos[1]
-#        if isinstance(self.target, Rabbit):
-#            dx = self.target.pos[0] - self.pos[0]
-#            dy = self.target.pos[1] - self.pos[1]
         else:
             
             dx = self.target[0] - self.pos[0]
@@ -431,6 +429,18 @@ running = True
 
 while running:
     starttime = time.time()
+<<<<<<< HEAD
+    water()
+    #check for break
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                running = False
+            elif event.key == pygame.K_ESCAPE:
+                running = False
+    #loop through al animals
+=======
     if not args.silent:
         # water()
         #check for break
@@ -442,11 +452,13 @@ while running:
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 
+>>>>>>> d018beabfc95be9a5c3e053ed8205a870bf7e1f1
     for animal in animals:
         animal.collision()
         animal.clearmates()
         animal.findtarget()
 
+    # draw and adjust timedependant variables
     for animal in animals:
         if not args.silent:
             animal.draw()
@@ -454,10 +466,18 @@ while running:
         animal.hung += 2
 #        animal.thurst += 3
         animal.sexd += 4
+<<<<<<< HEAD
+
+    #draw plants and update display
+    drawplants()
+    pygame.display.update()
+    win.fill((0, 255, 0))
+=======
     if not args.silent:
         drawplants()
         pygame.display.update()
         win.fill((0, 255, 0))
+>>>>>>> d018beabfc95be9a5c3e053ed8205a870bf7e1f1
     endtime = time.time()
 
     import timeit
