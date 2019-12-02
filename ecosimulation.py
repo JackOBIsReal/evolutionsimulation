@@ -99,7 +99,7 @@ class Animal:
         self.collision()
 
     def collision(self):
-
+        #check borders of map
         if self.pos[0] < 20:
             self.pos[0] = 20
         
@@ -109,7 +109,8 @@ class Animal:
             self.pos[0] = 1780
         if self.pos[1] > 970:
             self.pos[1] = 970
-
+        #check water
+        #warning
         ax = self.pos[0] + 10
         ay = self.pos[1] + 10
         
@@ -145,9 +146,6 @@ class Animal:
 
             dx = self.target.pos[0] - self.pos[0]
             dy = self.target.pos[1] - self.pos[1]
-#        if isinstance(self.target, Rabbit):
-#            dx = self.target.pos[0] - self.pos[0]
-#            dy = self.target.pos[1] - self.pos[1]
         else:
             
             dx = self.target[0] - self.pos[0]
@@ -409,12 +407,13 @@ while running:
                 running = False
             elif event.key == pygame.K_ESCAPE:
                 running = False
-
+    #loop through al animals
     for animal in animals:
         animal.collision()
         animal.clearmates()
         animal.findtarget()
 
+    # draw and adjust timedependant variables
     for animal in animals:
         animal.draw()
         animal.age += 1
@@ -422,7 +421,7 @@ while running:
 #        animal.thurst += 3
         animal.sexd += 4
 
-    
+    #draw plants and update display
     drawplants()
     pygame.display.update()
     win.fill((0, 255, 0))
