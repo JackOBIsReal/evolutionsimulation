@@ -473,13 +473,7 @@ while running:
             print animal.__class__.__name__
     counter += 1
     print str(endtime - starttime) + " " + str(counter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants))
-    if(len(speed) != 0):
-        if (endtime - starttime)*1000 > speed[-1]*3 and speed[-1] != 0 and (endtime - starttime)*1000 > 500:
-            speed.append(speed[-1])
-        else:
-            speed.append((endtime - starttime)*1000)
-    else:
-        speed.append((endtime - starttime)*1000)
+    speed.append((endtime - starttime)*1000)
     x.append(counter)
     rabbitCount.append(rabbitcounter)
     foxCount.append(foxcounter)
@@ -500,6 +494,7 @@ while running:
         ax2.tick_params(axis='y', labelcolor='blue')
 
         fig.tight_layout()
+        print speed
         plt.show()
 
 '''
