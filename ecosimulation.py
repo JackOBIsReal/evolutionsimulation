@@ -220,7 +220,12 @@ class Animal:
                 self.pos[1] -= abs(my)
             self.collision()
     def die(self):
-        pass
+        x = random.uniform(0, 1)
+        val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)
+        #print x, val, a
+        if x < val:
+            animals.remove(self)
+            
     def eat(self):
         
         if self.target in plants:
@@ -393,7 +398,7 @@ class Rabbit(Animal):
                         break
 
     def mate(self):
-        animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5]))
+        #animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5]))
         self.sexd -= 50
         self.ex.append([self.target, 50])
         self.target.ex.append([self, 50])
@@ -446,6 +451,7 @@ while running:
         animal.collision()
         animal.clearmates()
         animal.findtarget()
+        animal.die()
 
     for animal in animals:
         if args.show:
