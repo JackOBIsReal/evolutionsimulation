@@ -196,8 +196,8 @@ class Animal:
                     self.eat()
                 if isinstance(self.target, Fox) and self.sex != self.target.sex:
                    pass
-                if self.target in waters:
-                   self.thurst -= 50
+                #if self.target in waters:
+                #   self.thurst -= 50
         
         elif dx == 0 and dy > 0:
             self.pos[1] += self.v
@@ -322,6 +322,32 @@ class Animal:
                 r = corn
                 d = self.distance(corn)
         return d, r
+    
+
+    def choosetarget(self):
+        #sort according to pressures
+        needs = [[self.hung, 'hung'], [self.sexd, 'sex'], [self.thurst, 'thurst']]
+        for i in range(len(needs)-1, 0, -1):
+            for j in range(i):
+                if needs[j][0] < needs[j+1][0]:
+                    temp = needs[j]
+                    needs[j] = needs[j+1]
+                    needs[j+1] = temp
+
+        for need in needs:
+            if need[0] > 0:
+                if need[1] == 'hung':
+                    if self.targets[0] != None:
+                        self.target = self.targets[0]
+                        break
+                if need[1] == 'sex':
+                    if self.targets[1] != None:
+                        self.target = self.targets[1]
+                        break
+                if need[1] == 'thurst':
+                    if self.targets[2] != None:
+                        self.target = self.targets[2]
+                        break
 
     def clearmates(self):
         
@@ -382,30 +408,6 @@ class Rabbit(Animal):
         else:
             self.movetargeted()
             
-    def choosetarget(self):
-        #sort according to pressures
-        needs = [[self.hung, 'hung'], [self.sexd, 'sex'], [self.thurst, 'thurst']]
-        for i in range(len(needs)-1, 0, -1):
-            for j in range(i):
-                if needs[j][0] < needs[j+1][0]:
-                    temp = needs[j]
-                    needs[j] = needs[j+1]
-                    needs[j+1] = temp
-
-        for need in needs:
-            if need[0] > 0:
-                if need[1] == 'hung':
-                    if self.targets[0] != None:
-                        self.target = self.targets[0]
-                        break
-                if need[1] == 'sex':
-                    if self.targets[1] != None:
-                        self.target = self.targets[1]
-                        break
-                if need[1] == 'thurst':
-                    if self.targets[2] != None:
-                        self.target = self.targets[2]
-                        break
 
     def mate(self):
         animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0))
@@ -417,15 +419,34 @@ class Fox(Animal):
     def findtarget(self):
         self.target = None
         food = []
+        mate = []
+        self.targets = [None]*3
         d = True
         
         for animal in animals:
-            if isinstance(animal, Rabbit):
-                if self.distance(animal.pos) <= self.sens:
+            if self.distance(animal.pos) <= self.sens:
+                if isinstance(animal, Rabbit):
                     d = False
                     food.append(animal)
                     #self.target = self.findclosest(food)
+                elif self.age > 100 and self.sex != animal.sex:
+                    if self.sex == 1 and self not in animal.ex:
+                        d = False
+                        mate.append(animal)
+
+
+        if len(food) != 0:
+            self.targets[0] = self.findclosest(food)
+        else:
+            self.targets[0] = None
         
+        if len(mate) != 0:
+            self.targets[1] = self.findclosest(mate)
+        else:
+            self.targets[1] = None
+
+        self.choosetarget()
+
         if d:
             self.moverandom()
         else:
@@ -437,8 +458,8 @@ for i in range(int(args.plantCount)):
     genplants()
 for i in range(int(args.rabbitCount)):
     animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100)))
-# for i in range(args.foxCount):
-    #animals.append(Fox([rand(20, 1780), rand(20, 970)]))
+for i in range(int(args.foxCount)):
+    animals.append(Fox([rand(20, 1780), rand(20, 970)], rand(0, 100)))
 
 
 running = True
