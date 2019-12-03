@@ -399,7 +399,7 @@ class Rabbit(Animal):
                         break
 
     def mate(self):
-        #animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5]))
+        animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5]))
         self.sexd -= 50
         self.ex.append([self.target, 50])
         self.target.ex.append([self, 50])
