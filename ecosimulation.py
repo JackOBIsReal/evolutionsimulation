@@ -3,7 +3,7 @@ import argparse
 #using argparse to get the information about language, folder and text from CLI
 parser = argparse.ArgumentParser("")
 parser.add_argument('-s', dest='show', action='store_true', default=False, help="show the simulation live")
-parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish')
+parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish WIP')
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
 parser.add_argument('-pc', dest='plantCount', action='store', default=20, help='set the initial amount of plants')
@@ -442,7 +442,10 @@ while running:
                     running = False
                 elif event.key == pygame.K_ESCAPE:
                     running = False
-
+    for animal in animals:
+        animal.collision()
+        animal.clearmates()
+        animal.findtarget()
 
     for animal in animals:
         if args.show:
@@ -485,16 +488,16 @@ while running:
         running = False
         fig, ax1 = plt.subplots()
         ax1.set_xlabel('time (d)')
-        ax1.set_ylabel('time taken (ms)', color='tab:red')
-        ax1.plot(x, speed, color='tab:red')
-        ax1.tick_params(axis='y', labelcolor='tab:red')
+        ax1.set_ylabel('time taken (ms)', color='red')
+        ax1.plot(x, speed, color='red')
+        ax1.tick_params(axis='y', labelcolor='red')
         
         ax2 = ax1.twinx()
 
-        ax2.set_ylabel('rabbitcount', color='tab:blue')
-        ax2.plot(x, rabbitCount, color = 'tab:blue')
-        ax2.plot(x, foxCount, color = 'tab:green')
-        ax2.tick_params(axis='y', labelcolor='tab:blue')
+        ax2.set_ylabel('rabbitcount', color='blue')
+        ax2.plot(x, rabbitCount, color = 'blue')
+        ax2.plot(x, foxCount, color = 'green')
+        ax2.tick_params(axis='y', labelcolor='blue')
 
         fig.tight_layout()
         plt.show()
