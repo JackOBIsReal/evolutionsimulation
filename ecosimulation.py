@@ -226,7 +226,11 @@ class Animal:
         #print x, val, a
         if x < val:
             animals.remove(self)
-            
+    
+    def starve(self):
+        if self.hung > 100:
+            animals.remove(self)
+
     def eat(self):
         
         if self.target in plants:
@@ -453,6 +457,7 @@ while running:
         animal.clearmates()
         animal.findtarget()
         animal.die()
+        animal.starve()
 
     for animal in animals:
         if args.show:
