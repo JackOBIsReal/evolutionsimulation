@@ -42,11 +42,10 @@ foxCount = []
 global e 
 e = math.e
 if not args.silent:
-
-if args.show:
-    dsize = (1850, 990)
-    pygame.init()
-    win = pygame.display.set_mode(dsize)
+    if args.show:
+        dsize = (1850, 990)
+        pygame.init()
+        win = pygame.display.set_mode(dsize)
 
 # def water():
 #     waters.append([[120, 70], [80, 60]])
@@ -433,11 +432,7 @@ running = True
 
 while running:
     starttime = time.time()
-<<<<<<< HEAD
-    if not args.silent:
-=======
     if args.show:
->>>>>>> acf73d8045d6d6834be6c2a8beae39e9c535281c
         # water()
         #check for break
         events = pygame.event.get()
@@ -448,13 +443,6 @@ while running:
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 
-<<<<<<< HEAD
-=======
-    for animal in animals:
-        animal.collision()
-        animal.clearmates()
-        animal.findtarget()
->>>>>>> acf73d8045d6d6834be6c2a8beae39e9c535281c
 
     for animal in animals:
         if args.show:
@@ -463,25 +451,10 @@ while running:
         animal.hung += 2
 #        animal.thurst += 3
         animal.sexd += 4
-<<<<<<< HEAD
-
-
-
-
-
-
-
-    if not args.silent:
-        drawplants()
-        pygame.display.update()
-        win.fill((0, 255, 0))
-
-=======
     if args.show:
         drawplants()
         pygame.display.update()
         win.fill((0, 255, 0))
->>>>>>> acf73d8045d6d6834be6c2a8beae39e9c535281c
     endtime = time.time()
 
     import timeit
