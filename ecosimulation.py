@@ -2,7 +2,7 @@ import argparse
 
 #using argparse to get the information about language, folder and text from CLI
 parser = argparse.ArgumentParser("")
-parser.add_argument('-s', dest='silent', action='store_true', default=False, help="run in silent mode")
+parser.add_argument('-s', dest='show', action='store_true', default=False, help="show the simulation live")
 parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish')
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
@@ -40,7 +40,7 @@ speed = []
 rabbitCount = []
 foxCount = []
 
-if not args.silent:
+if args.show:
     dsize = (1850, 990)
     pygame.init()
     win = pygame.display.set_mode(dsize)
@@ -50,7 +50,7 @@ if not args.silent:
 #     waters.append([[1200, 700], [80, 60]])
 #     waters.append([[520, 870], [100, 40]])
 #     waters.append([[720, 200], [400, 700]])
-#     if not args.silent:
+#     if args.show:
 #         for water in waters:
 #             pygame.draw.rect(win, (0, 0, 255), (water[0][0], water[0][1], water[1][0], water[1][1]))
 
@@ -89,7 +89,7 @@ def genplants():
     #                 y = water[0][1] + water[1][1]
     plants.append([x, y])
 
-    if not args.silent:
+    if args.show:
         drawplants()
 
 def drawplants():
@@ -429,19 +429,7 @@ running = True
 
 while running:
     starttime = time.time()
-<<<<<<< HEAD
-    water()
-    #check for break
-    events = pygame.event.get()
-    for event in events:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                running = False
-            elif event.key == pygame.K_ESCAPE:
-                running = False
-    #loop through al animals
-=======
-    if not args.silent:
+    if args.show:
         # water()
         #check for break
         events = pygame.event.get()
@@ -452,7 +440,6 @@ while running:
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 
->>>>>>> d018beabfc95be9a5c3e053ed8205a870bf7e1f1
     for animal in animals:
         animal.collision()
         animal.clearmates()
@@ -460,24 +447,16 @@ while running:
 
     # draw and adjust timedependant variables
     for animal in animals:
-        if not args.silent:
+        if args.show:
             animal.draw()
         animal.age += 1
         animal.hung += 2
 #        animal.thurst += 3
         animal.sexd += 4
-<<<<<<< HEAD
-
-    #draw plants and update display
-    drawplants()
-    pygame.display.update()
-    win.fill((0, 255, 0))
-=======
-    if not args.silent:
+    if args.show:
         drawplants()
         pygame.display.update()
         win.fill((0, 255, 0))
->>>>>>> d018beabfc95be9a5c3e053ed8205a870bf7e1f1
     endtime = time.time()
 
     import timeit
