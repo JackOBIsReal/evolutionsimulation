@@ -33,7 +33,8 @@ x = []
 speed = []
 rabbitCount = []
 foxCount = []
-
+global e 
+e = math.e
 if not args.silent:
     dsize = (1850, 990)
     pygame.init()
@@ -211,7 +212,8 @@ class Animal:
             if dy < 0:
                 self.pos[1] -= abs(my)
             self.collision()
-
+    def die(self):
+        pass
     def eat(self):
         
         if self.target in plants:
@@ -421,18 +423,6 @@ running = True
 
 while running:
     starttime = time.time()
-<<<<<<< HEAD
-    water()
-    #check for break
-    events = pygame.event.get()
-    for event in events:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                running = False
-            elif event.key == pygame.K_ESCAPE:
-                running = False
-    #loop through al animals
-=======
     if not args.silent:
         # water()
         #check for break
@@ -444,13 +434,7 @@ while running:
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 
->>>>>>> d018beabfc95be9a5c3e053ed8205a870bf7e1f1
-    for animal in animals:
-        animal.collision()
-        animal.clearmates()
-        animal.findtarget()
 
-    # draw and adjust timedependant variables
     for animal in animals:
         if not args.silent:
             animal.draw()
@@ -458,18 +442,18 @@ while running:
         animal.hung += 2
 #        animal.thurst += 3
         animal.sexd += 4
-<<<<<<< HEAD
 
-    #draw plants and update display
-    drawplants()
-    pygame.display.update()
-    win.fill((0, 255, 0))
-=======
+
+
+
+
+
+
     if not args.silent:
         drawplants()
         pygame.display.update()
         win.fill((0, 255, 0))
->>>>>>> d018beabfc95be9a5c3e053ed8205a870bf7e1f1
+
     endtime = time.time()
 
     import timeit
@@ -501,7 +485,7 @@ while running:
         fig, ax1 = plt.subplots()
         ax1.set_xlabel('time (d)')
         ax1.set_ylabel('time taken (ms)', color='tab:red')
-        ax1.plot(x, speed, color = 'tab:red')
+        ax1.plot(x, speed, color='tab:red')
         ax1.tick_params(axis='y', labelcolor='tab:red')
         
         ax2 = ax1.twinx()
@@ -513,3 +497,27 @@ while running:
 
         fig.tight_layout()
         plt.show()
+
+
+'''
+
+log = []
+for i in range(5000):
+    #val = 0.000015*(e**(-1*(i)+4.8)+20*i-4)
+    #print val
+    alive = True
+    a = 0.0
+    while alive:
+        x = random.uniform(0, 1)
+        val = 0.00000001*(e**(-1.0*(a)+4.8)+20.0*a-4.0)
+        #print x, val, a
+        if x < val: 
+            alive = False
+            log.append(a)
+        a += 1
+
+av = 0.0
+for i in range(len(log)):
+    av += log[i]
+print (av/len(log))/365
+'''
