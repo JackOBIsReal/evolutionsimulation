@@ -486,17 +486,11 @@ while running:
         running = False
         fig, ax1 = plt.subplots()
         ax1.set_xlabel('time (d)')
-        ax1.set_ylabel('time taken (ms)', color='red')
-        ax1.plot(x, speed, color='red')
-        ax1.tick_params(axis='y', labelcolor='red')
+        ax1.set_ylabel('Foxes (green)\nRabbits (blue)', color='black')
+        ax1.plot(x, foxCount, color='green')
+        ax1.tick_params(axis='y', labelcolor='black')
         
-        ax2 = ax1.twinx()
-
-        ax2.set_ylabel('rabbitcount', color='blue')
-        ax2.plot(x, rabbitCount, color = 'blue')
-        ax2.plot(x, foxCount, color = 'green')
-        ax2.tick_params(axis='y', labelcolor='blue')
+        ax1.plot(x, rabbitCount, color = 'blue')
 
         fig.tight_layout()
-        print speed
         plt.show()
