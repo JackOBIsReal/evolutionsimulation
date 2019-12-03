@@ -176,7 +176,7 @@ class Animal:
         #             if closest[1] == 3:
         #                 self.pos[1] = water[0][1] + water[1][1]
     def movetargeted(self):
-        if isinstance(self.target, Animal):
+        if self.target in animals:
 
             dx = self.target.pos[0] - self.pos[0]
             dy = self.target.pos[1] - self.pos[1]
