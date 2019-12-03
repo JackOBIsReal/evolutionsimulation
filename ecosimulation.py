@@ -41,7 +41,7 @@ rabbitCount = []
 foxCount = []
 global e 
 e = math.e
-if not args.silent:
+if args.show:
     if args.show:
         dsize = (1850, 990)
         pygame.init()
