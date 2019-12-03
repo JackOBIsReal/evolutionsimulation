@@ -37,7 +37,7 @@ global speed
 global rabbitCount
 global foxCount
 global dievalue
-dievalue = 307
+dievalue = 306
 x = []
 speed = []
 rabbitCount = []
@@ -488,7 +488,7 @@ while running:
     x.append(counter)
     rabbitCount.append(rabbitcounter)
     foxCount.append(foxcounter)
-    if counter == int(args.dayCount):
+    if counter == int(args.dayCount) or rabbitcounter == 0:
         running = False
         fig, ax1 = plt.subplots()
         plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
