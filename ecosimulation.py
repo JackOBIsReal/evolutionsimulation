@@ -37,7 +37,7 @@ global speed
 global rabbitCount
 global foxCount
 global dievalue
-dievalue = 306
+dievalue = 500
 x = []
 speed = []
 rabbitCount = []
@@ -107,7 +107,7 @@ class Animal:
         self.sex = bool(random.getrandbits(1))
         self.v = 5
         self.sens = 300
-        self.hung = 100
+        self.hung = 50
         self.thurst = 100
         self.sexd = 100
         self.age = age
@@ -224,13 +224,16 @@ class Animal:
             self.collision()
     def die(self):
         x = random.uniform(0, 1)
-        val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)
+        val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
         #print x, val, a
         if x < val:
             animals.remove(self)
     
     def starve(self):
-        if self.hung > dievalue:
+        x = random.uniform(0, 1)
+        val = 0.00000001*dievalue*(e**(-1.0*(self.hung)+4.8)+20.0*self.hung-4.0)#die of old age 
+        #print x, val, a
+        if x < val:
             animals.remove(self)
 
     def eat(self):
@@ -347,7 +350,7 @@ class Rabbit(Animal):
         else:
             self.targets[0] = None
         
-        if self.age > 100:
+        if True:#self.age > 100:
             for animal in animals:
                 if self.distance(animal) <= self.sens and animal.age > 100:
                     if isinstance(animal, Rabbit) and self.sex != animal.sex:
