@@ -36,6 +36,8 @@ global x
 global speed
 global rabbitCount
 global foxCount
+global dievalue
+dievalue = 307
 x = []
 speed = []
 rabbitCount = []
@@ -228,7 +230,7 @@ class Animal:
             animals.remove(self)
     
     def starve(self):
-        if self.hung > 100:
+        if self.hung > dievalue:
             animals.remove(self)
 
     def eat(self):
@@ -486,11 +488,10 @@ while running:
     x.append(counter)
     rabbitCount.append(rabbitcounter)
     foxCount.append(foxcounter)
-
     if counter == int(args.dayCount):
         running = False
         fig, ax1 = plt.subplots()
-        plt.title("Startwerte:\nHasen: " + str(rabbitcounter) + " Fuechse: " + str(foxcounter) + " Pflanzen: " + str(len(plants)))
+        plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         ax1.set_xlabel('time (d)')
         ax1.set_ylabel('Foxes (green)\nRabbits (blue)', color='black')
         ax1.plot(x, foxCount, color='green')
