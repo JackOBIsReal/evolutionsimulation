@@ -102,7 +102,7 @@ def drawplants():
         pygame.draw.rect(win, (0, 80, 0), (plant[0], plant[1] ,10, 10))
 
 class Animal:
-    def __init__(self, pos):
+    def __init__(self, pos, age):
         self.pos = pos
         self.sex = bool(random.getrandbits(1))
         self.v = 5
@@ -110,7 +110,7 @@ class Animal:
         self.hung = 100
         self.thurst = 100
         self.sexd = 100
-        self.age = 0
+        self.age = age
         self.ex = []
 
     def draw(self):
@@ -405,7 +405,7 @@ class Rabbit(Animal):
                         break
 
     def mate(self):
-        animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5]))
+        animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0))
         self.sexd -= 50
         self.ex.append([self.target, 50])
         self.target.ex.append([self, 50])
@@ -433,7 +433,7 @@ class Fox(Animal):
 for i in range(int(args.plantCount)):
     genplants()
 for i in range(int(args.rabbitCount)):
-    animals.append(Rabbit([rand(20, 1780), rand(20, 970)]))
+    animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100)))
 # for i in range(args.foxCount):
     #animals.append(Fox([rand(20, 1780), rand(20, 970)]))
 
