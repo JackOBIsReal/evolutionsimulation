@@ -39,14 +39,11 @@ x = []
 speed = []
 rabbitCount = []
 foxCount = []
-<<<<<<< HEAD
 global e 
 e = math.e
 if not args.silent:
-=======
 
 if args.show:
->>>>>>> acf73d8045d6d6834be6c2a8beae39e9c535281c
     dsize = (1850, 990)
     pygame.init()
     win = pygame.display.set_mode(dsize)
