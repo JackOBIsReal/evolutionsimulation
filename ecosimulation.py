@@ -19,6 +19,7 @@ import time
 import matplotlib.pyplot as plt
 import os
 import sys
+import timeit
 
 rand = random.uniform
 root = math.sqrt
@@ -465,9 +466,6 @@ while running:
         pygame.display.update()
         win.fill((0, 255, 0))
     endtime = time.time()
-
-    import timeit
-
     foxcounter = 0
     rabbitcounter = 0
     for animal in animals:
