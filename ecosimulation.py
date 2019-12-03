@@ -1,18 +1,24 @@
-import pygame
-import math
-import random
-import time
-import numpy.polynomial.polynomial as poly
-import numpy
-import matplotlib.pyplot as plt
 import argparse
 
 #using argparse to get the information about language, folder and text from CLI
 parser = argparse.ArgumentParser("")
-parser.add_argument('-s', dest='silent', action='store_true', default=False, help="run in silent mode")
+parser.add_argument('-s', dest='show', action='store_true', default=False, help="show the simulation live")
+parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish')
+parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
+parser.add_argument('-pc', dest='plantCount', action='store', default=20, help='set the initial amount of plants')
+parser.add_argument('-rc', dest='rabbitCount', action='store', default=20, help='set the initial amount of rabbits')
+parser.add_argument('-fc', dest='foxCount', action='store', default=20, help='set the initial amount of foxes')
 
 args = parser.parse_args()
+
+import pygame
+import math
+import random
+import time
+import matplotlib.pyplot as plt
+import os
+import sys
 
 rand = random.uniform
 root = math.sqrt
@@ -33,9 +39,14 @@ x = []
 speed = []
 rabbitCount = []
 foxCount = []
+<<<<<<< HEAD
 global e 
 e = math.e
 if not args.silent:
+=======
+
+if args.show:
+>>>>>>> acf73d8045d6d6834be6c2a8beae39e9c535281c
     dsize = (1850, 990)
     pygame.init()
     win = pygame.display.set_mode(dsize)
@@ -45,7 +56,7 @@ if not args.silent:
 #     waters.append([[1200, 700], [80, 60]])
 #     waters.append([[520, 870], [100, 40]])
 #     waters.append([[720, 200], [400, 700]])
-#     if not args.silent:
+#     if args.show:
 #         for water in waters:
 #             pygame.draw.rect(win, (0, 0, 255), (water[0][0], water[0][1], water[1][0], water[1][1]))
 
@@ -84,7 +95,7 @@ def genplants():
     #                 y = water[0][1] + water[1][1]
     plants.append([x, y])
 
-    if not args.silent:
+    if args.show:
         drawplants()
 
 def drawplants():
@@ -411,9 +422,11 @@ class Fox(Animal):
 
 # water()
 
-for i in range(20):
+for i in range(int(args.plantCount)):
     genplants()
+for i in range(int(args.rabbitCount)):
     animals.append(Rabbit([rand(20, 1780), rand(20, 970)]))
+# for i in range(args.foxCount):
     #animals.append(Fox([rand(20, 1780), rand(20, 970)]))
 
 
@@ -423,7 +436,11 @@ running = True
 
 while running:
     starttime = time.time()
+<<<<<<< HEAD
     if not args.silent:
+=======
+    if args.show:
+>>>>>>> acf73d8045d6d6834be6c2a8beae39e9c535281c
         # water()
         #check for break
         events = pygame.event.get()
@@ -434,14 +451,22 @@ while running:
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 
+<<<<<<< HEAD
+=======
+    for animal in animals:
+        animal.collision()
+        animal.clearmates()
+        animal.findtarget()
+>>>>>>> acf73d8045d6d6834be6c2a8beae39e9c535281c
 
     for animal in animals:
-        if not args.silent:
+        if args.show:
             animal.draw()
         animal.age += 1
         animal.hung += 2
 #        animal.thurst += 3
         animal.sexd += 4
+<<<<<<< HEAD
 
 
 
@@ -454,6 +479,12 @@ while running:
         pygame.display.update()
         win.fill((0, 255, 0))
 
+=======
+    if args.show:
+        drawplants()
+        pygame.display.update()
+        win.fill((0, 255, 0))
+>>>>>>> acf73d8045d6d6834be6c2a8beae39e9c535281c
     endtime = time.time()
 
     import timeit
@@ -497,7 +528,6 @@ while running:
 
         fig.tight_layout()
         plt.show()
-
 
 '''
 
