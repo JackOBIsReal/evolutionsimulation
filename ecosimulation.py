@@ -311,13 +311,13 @@ class Rabbit(Animal):
             
 
     def mate(self):
-        if self.hung / dievalue < 1.3 and self.sexd > 50 and self.fuckedAlready == 0:
+        if self.hung / dievalue < 1.5 and self.sexd > 50 and self.fuckedAlready == 0:
             animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100)))
             self.hung += 25
             self.sexd -= 50
             self.ex.append([self.target, 50])
             self.target.ex.append([self, 50])
-            self.fuckedAlready = 10
+            self.fuckedAlready = 6
 
 class Fox(Animal):
     #same for foxes jus other tastes (more deadly)
