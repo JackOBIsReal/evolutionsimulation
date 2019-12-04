@@ -37,7 +37,7 @@ global speed
 global rabbitCount
 global foxCount
 global dievalue
-dievalue = 500
+dievalue = 200
 x = []
 speed = []
 rabbitCount = []
@@ -110,8 +110,13 @@ class Animal:
         self.hung = 50
         self.thurst = 100
         self.sexd = 100
+        self.fuckedAlready = 0
         self.age = age
         self.ex = []
+
+    def resetFuckery(self):
+        if self.fuckedAlready > 0:
+            self.fuckedAlready -= 1
 
     def draw(self):
         if isinstance(self, Rabbit):
@@ -230,10 +235,9 @@ class Animal:
             animals.remove(self)
     
     def starve(self):
-        x = random.uniform(0, 1)
-        val = 0.00000001*dievalue*(e**(-1.0*(self.hung)+4.8)+20.0*self.hung-4.0)#die of old age 
+        x = random.uniform(0, 2)
         #print x, val, a
-        if x < val:
+        if x < self.hung / dievalue:
             animals.remove(self)
 
     def eat(self):
@@ -366,17 +370,18 @@ class Rabbit(Animal):
         self.targets = [None]*3
         d = True
         
-        for plant in plants:
-            if self.distance(plant) <= self.sens:
-                d = False
-                food.append(plant)
-                #check this
-        if len(food) != 0:
-            self.targets[0] = self.findclosest(food)
-        else:
-            self.targets[0] = None
+        if self.hung / dievalue < 1.5:
+            for plant in plants:
+                if self.distance(plant) <= self.sens:
+                    d = False
+                    food.append(plant)
+                    #check this
+            if len(food) != 0:
+                self.targets[0] = self.findclosest(food)
+            else:
+                self.targets[0] = None
         
-        if True:#self.age > 100:
+        if self.sexd > 30:#self.age > 100:
             for animal in animals:
                 if self.distance(animal) <= self.sens and animal.age > 100:
                     if isinstance(animal, Rabbit) and self.sex != animal.sex:
@@ -410,10 +415,13 @@ class Rabbit(Animal):
             
 
     def mate(self):
-        animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0))
-        self.sexd -= 50
-        self.ex.append([self.target, 50])
-        self.target.ex.append([self, 50])
+        if self.hung / dievalue < 1.3 and self.sexd > 50 and self.fuckedAlready == 0:
+            animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100)))
+            self.hung += 25
+            self.sexd -= 50
+            self.ex.append([self.target, 50])
+            self.target.ex.append([self, 50])
+            self.fuckedAlready = 10
 
 class Fox(Animal):
     def findtarget(self):
@@ -479,6 +487,7 @@ while running:
                 elif event.key == pygame.K_ESCAPE:
                     running = False
     for animal in animals:
+        animal.resetFuckery()
         animal.collision()
         animal.clearmates()
         animal.findtarget()
