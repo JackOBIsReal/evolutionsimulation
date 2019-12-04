@@ -28,14 +28,14 @@ global animals
 animals = []
 global plants
 plants = []
+# global waters
+# waters = []
 global counter
 counter = 0
 global x
 global speed
 global rabbitCount
 global foxCount
-global dievalue
-dievalue = 500
 x = []
 speed = []
 rabbitCount = []
@@ -48,12 +48,48 @@ if args.show:
         pygame.init()
         win = pygame.display.set_mode(dsize)
 
+# def water():
+#     waters.append([[120, 70], [80, 60]])
+#     waters.append([[1200, 700], [80, 60]])
+#     waters.append([[520, 870], [100, 40]])
+#     waters.append([[720, 200], [400, 700]])
+#     if args.show:
+#         for water in waters:
+#             pygame.draw.rect(win, (0, 0, 255), (water[0][0], water[0][1], water[1][0], water[1][1]))
+
 
 def genplants():
     x = rand(20, 1830)
     y = rand(20, 970)
     ax = x + 10
     ay = y + 10
+    # for water in waters:
+    #     lbor = water[0][0]
+    #     rbor = water[0][0] + water[1][0]
+    #     tbor = water[0][1]
+    #     bbor = water[0][1] + water[1][1]
+    #     hborders = [tbor, bbor]
+    #     vborders = [lbor, rbor]
+    #     if ax >= water[0][0] and x <= water[0][0] + water[1][0]:
+    #         if ay >= water[0][1] and y <= water[0][1] + water[1][1]:
+    #             closest = [568656, None]
+
+    #             for i in range(len(vborders)):
+    #                 if abs(vborders[i] - x) < closest[0]:
+    #                     closest = [abs(vborders[i] - x), i]
+
+    #             for i in range(len(hborders)):
+    #                 if abs(hborders[i] - y) < closest[0]:
+    #                     closest = [abs(hborders[i] - y), i + 2]
+
+    #             if closest[1] == 0:
+    #                 x = water[0][0] -10
+    #             if closest[1] == 1:
+    #                 x = water[0][0] + water[1][0]
+    #             if closest[1] == 2: 
+    #                 y = water[0][1] - 10
+    #             if closest[1] == 3:
+    #                 y = water[0][1] + water[1][1]
     plants.append([x, y])
 
     if args.show:
@@ -64,17 +100,16 @@ def drawplants():
         pygame.draw.rect(win, (0, 80, 0), (plant[0], plant[1] ,10, 10))
 
 class Animal:
-    def __init__(self, pos, age):
+    def __init__(self, pos):
         self.pos = pos
         self.sex = bool(random.getrandbits(1))
         self.v = 5
         self.sens = 300
-        self.hung = 50
-
+        self.hung = 100
+        self.thurst = 100
         self.sexd = 100
-        self.age = age
+        self.age = 0
         self.ex = []
-        self.target = None
 
     def draw(self):
         if isinstance(self, Rabbit):
@@ -95,7 +130,6 @@ class Animal:
         self.pos[1] += y*self.v
         self.collision()
 
-    #check for fobidden areas of the map: water borders
     def collision(self):
         #check borders of map
         if self.pos[0] < 20:
@@ -111,35 +145,58 @@ class Animal:
         #warning
         ax = self.pos[0] + 10
         ay = self.pos[1] + 10
-    
-    #move towards self.target
+        
+        # for water in waters:
+        #     lbor = water[0][0]
+        #     rbor = water[0][0] + water[1][0]
+        #     tbor = water[0][1]
+        #     bbor = water[0][1] + water[1][1]
+        #     hborders = [tbor, bbor]
+        #     vborders = [lbor, rbor]
+        #     if ax >= water[0][0] and self.pos[0] <= water[0][0] + water[1][0]:
+        #         if ay >= water[0][1] and self.pos[1] <= water[0][1] + water[1][1]:
+        #             closest = [568656, None]
+
+        #             for i in range(len(vborders)):
+        #                 if abs(vborders[i] - self.pos[0]) < closest[0]:
+        #                     closest = [abs(vborders[i] - self.pos[0]), i]
+
+        #             for i in range(len(hborders)):
+        #                 if abs(hborders[i] - self.pos[1]) < closest[0]:
+        #                     closest = [abs(hborders[i] - self.pos[1]), i + 2]
+
+        #             if closest[1] == 0:
+        #                 self.pos[0] = water[0][0] -10
+        #             if closest[1] == 1:
+        #                 self.pos[0] = water[0][0] + water[1][0]
+        #             if closest[1] == 2:
+        #                 self.pos[1] = water[0][1] - 10
+        #             if closest[1] == 3:
+        #                 self.pos[1] = water[0][1] + water[1][1]
     def movetargeted(self):
-        #define vec to self.target
         if isinstance(self.target, Animal):
+
             dx = self.target.pos[0] - self.pos[0]
             dy = self.target.pos[1] - self.pos[1]
-        else: 
+        else:
+            
             dx = self.target[0] - self.pos[0]
             dy = self.target[1] - self.pos[1]
-        #if self.target is closer than one step
+
         if self.distance(self.target) < self.v:
-            #if self is rabbit
             if isinstance(self, Rabbit):
-                #eat plant
                 if self.target in plants:
                     self.eat()
-                #fuck other rabbits
                 if isinstance(self.target, Rabbit) and self.sex != self.target.sex:
                     self.mate()
-            #if self is fox
             if isinstance(self, Fox):
                 if isinstance(self.target, Rabbit):
-                    #eat rabbits
                     self.eat()
-                if isinstance(self.target, Fox) and self.sex != self.target.sex: 
-                    #fuck other foxes
-                    self.mate()
-        #check if one of components = 0 because fuck math
+                if isinstance(self.target, Fox) and self.sex != self.target.sex:
+                   pass
+                if self.target in waters:
+                   self.thurst -= 50
+        
         elif dx == 0 and dy > 0:
             self.pos[1] += self.v
         elif dx == 0 and dy < 0:
@@ -150,12 +207,9 @@ class Animal:
         elif dy == 0 and dx < 0:
             self.pos[1] -= self.v
         else:
-            #else normalize vec
-            # i forgot to normalize to fucking self.v i guess
             mx = dx / dy
             my = dy / dx
             d = root(mx ** 2 + my ** 2)
-            #move in the respective components
             if dx > 0:
                 self.pos[0] += abs(mx)
             if dy > 0:
@@ -166,44 +220,36 @@ class Animal:
             if dy < 0:
                 self.pos[1] -= abs(my)
             self.collision()
-
-    #die when i tell you to
     def die(self):
         x = random.uniform(0, 1)
-        val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
-        
+        val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)
+        #print x, val, a
         if x < val:
             animals.remove(self)
-
-    #starve as i please
+    
     def starve(self):
-        x = random.uniform(0, 1)
-        #needs to be abjusted
-        val = 0.00000001*dievalue*(e**(-1.0*(self.hung)+4.8)+20.0*self.hung-4.0)#die of old age 
-        
-        if x < val:
+        if self.hung > 100:
             animals.remove(self)
 
-    #eat palnst or rabbits
     def eat(self):
+        
         if self.target in plants:
             plants.remove(self.target)
             genplants()
             self.hung -= 50
 
-        if isinstance(self.target, Rabbit): 
+        if isinstance(self.target, Rabbit):
             animals.remove(self.target)
             self.hung -= 50
 
-    #find closest potetial target
+
+
     def findclosest(self, targets):
-        #wtf
+
         if type(targets[0]) == int or type(targets[0]) == float:
             return targets
-        #set stupid high number
         closest = [None, 6757865]
         for target in targets:
-            #if anything is closer than previous replace
             if isinstance(target, Animal):
                 a = self.distance(target.pos)
             else:
@@ -212,10 +258,8 @@ class Animal:
                 closest = [target, a]
         return closest[0]
     
-    #measure distance to what the hell i want
     def distance(self, target):
         if isinstance(target, Animal):
-            #pythagoras
             dx = target.pos[0] - self.pos[0]
             dy = target.pos[1] - self.pos[1]
         else:
@@ -223,38 +267,59 @@ class Animal:
             dy = target[1] - self.pos[1]
         return root(dx **2 + dy ** 2)
 
-    #find the best target
-    def choosetarget(self):
-        #sort according to pressures
-        needs = [[self.hung, 'hung'], [self.sexd, 'sex']]
-        for i in range(len(needs)-1, 0, -1):
-            for j in range(i):
-                if needs[j][0] < needs[j+1][0]:
-                    temp = needs[j]
-                    needs[j] = needs[j+1]
-                    needs[j+1] = temp
-        #look for matches and define self.target
-        for need in needs: 
-            if need[1] == 'hung':
-                if self.targets[0] != None:
-                    self.target = self.targets[0]
-                    break
-            if need[1] == 'sex':
-                if self.targets[1] != None:
-                    self.target = self.targets[1]
-                    break
-    #fuck needs enhancement shitload of it actually
-    def mate(self):
-        if isinstance(self, Rabbit):
-            animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0))
+    def waterdistance(self, water):
+        ax = self.pos[0]
+        ay = self.pos[1]
+        r = None
+        if ax < water[0][0]:
+            if ay < water[0][1]:
+                #obere linke ecke
+                r = water[0]
+                d = self.distance(water[0])
+            elif ay < water[0][1] + water[1][1]:
+                #x ditance zur Linken Kante
+                r = [water[0][0], self.pos[1]]
+                d = abs(water[0][0] - self.pos[0])
+            else:
+                #untere linke Ecke
+                corn = [water[0][0], water[1][1]]
+                r = corn
+                d = self.distance(corn)
+        elif ax < water[0][0] + water[1][0]:
+            if ay < water[0][1]:
+                #yditance zur oberen Kante
+                r = [self.pos[0], water[0][1]]
+                d = water[0][1] - self.pos[1]
+            elif ay < water[0][1] + water[1][1]:
+                #im wasser
+                #checken ob das passier
+                print 'error'
+                self.collision()
+            else:
+                # Ydistance zur unteren Kante
+                p = water[0][1] + water[1][1]
+                d = p - self.pos[1]
+                r = [self.pos[0], p]
         else:
-            animals.append(Fox([self.pos[0] + 5, self.pos[1] + 5], 0))
-        self.sexd -= 50
-        self.ex.append([self.target, 50])
-        self.target.ex.append([self, 50])
-    
-    #remove saved partners after cetrain time
+            if ay < water[0][1]:
+                #clsosest point = water[0][0] + water[1][0]
+                corn = [water[0][0] + water[1][0], water[0][1]]
+                r = corn
+                d = self.distance(corn)
+            elif ay < water[0][1] + water[1][1]:
+                #x ditance rechte Kante
+                p = water[0][0] + water[1][0]
+                d = p - self.pos[0]
+                r = [p, self.pos[1]]
+            else:
+                #untere rechte Ecke
+                corn = [water[0][0] + water[0][1], water[0][1] + water[1][1]]
+                r = corn
+                d = self.distance(corn)
+        return d, r
+
     def clearmates(self):
+        
         for ex in self.ex:
             ex[1] -= 1
             if ex[1] <= 0:
@@ -263,99 +328,112 @@ class Animal:
 
 class Rabbit(Animal):
     
-    #find target for self
     def findtarget(self):
-        #initiate / reset variables
-        self.target = None
         food = []
         mate = []
-
-        self.targets = [None]*2
+        # drinks = []
+        self.targets = [None]*3
         d = True
-        #loop though all plants
+        
         for plant in plants:
-            #if plant within vision add to poential foods
             if self.distance(plant) <= self.sens:
-                
+                d = False
                 food.append(plant)
                 #check this
         if len(food) != 0:
-            #choose closest food
             self.targets[0] = self.findclosest(food)
-            d = False
         else:
             self.targets[0] = None
         
-        #check for own age, age of partner, saved partners, sex,
         if self.age > 100:
             for animal in animals:
                 if self.distance(animal) <= self.sens and animal.age > 100:
                     if isinstance(animal, Rabbit) and self.sex != animal.sex:
                         if self.sex == 1 and self not in animal.ex:
-                            #if all criterial met add to patrners
+                            d = False
                             mate.append(animal)
         if len(mate) != 0:
-            #find closest partner
             self.targets[1] = self.findclosest(mate)
-            d = False
 
         else:
             self.targets[1] = None
 
+        # for water in waters:
+        #     x = self.waterdistance(water)
+        #     if x[0] <= self.sens:
+        #         d = False
+        #         drinks.append(water)
+        # if len(drinks) != 0:
+        #     self.targets[2] = self.findclosest(x[1])
+        # else:
+        #     self.targets[2] = None
+
+
+
+        self.choosetarget()
+
         if d:
-            #if nothing in reach
             self.moverandom()
         else:
-            self.choosetarget()
             self.movetargeted()
             
+    def choosetarget(self):
+        #sort according to pressures
+        needs = [[self.hung, 'hung'], [self.sexd, 'sex'], [self.thurst, 'thurst']]
+        for i in range(len(needs)-1, 0, -1):
+            for j in range(i):
+                if needs[j][0] < needs[j+1][0]:
+                    temp = needs[j]
+                    needs[j] = needs[j+1]
+                    needs[j+1] = temp
+
+        for need in needs:
+            if need[0] > 0:
+                if need[1] == 'hung':
+                    if self.targets[0] != None:
+                        self.target = self.targets[0]
+                        break
+                if need[1] == 'sex':
+                    if self.targets[1] != None:
+                        self.target = self.targets[1]
+                        break
+                if need[1] == 'thurst':
+                    if self.targets[2] != None:
+                        self.target = self.targets[2]
+                        break
+
+    def mate(self):
+        animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5]))
+        self.sexd -= 50
+        self.ex.append([self.target, 50])
+        self.target.ex.append([self, 50])
 
 class Fox(Animal):
-    #same for foxes jus other tastes (more deadly)
     def findtarget(self):
         self.target = None
         food = []
-        mate = []
-        self.targets = [None]*2
         d = True
         
         for animal in animals:
-            if self.distance(animal.pos) <= self.sens:
-                if isinstance(animal, Rabbit):
-                    
+            if isinstance(animal, Rabbit):
+                if self.distance(animal.pos) <= self.sens:
+                    d = False
                     food.append(animal)
                     #self.target = self.findclosest(food)
-                elif self.age > 100 and self.sex != animal.sex:
-                    if self.sex == 1 and self not in animal.ex:
-                        
-                        mate.append(animal)
-
-        if len(food) != 0:
-            self.targets[0] = self.findclosest(food)
-            d = False
-        else:
-            self.targets[0] = None
         
-        if len(mate) != 0:
-            self.targets[1] = self.findclosest(mate)
-            d = False
-        else:
-            self.targets[1] = None
-
-        if d: 
+        if d:
             self.moverandom()
         else:
-            
-            self.choosetarget()
             self.movetargeted()
 
-#you didn't comment either
+# water()
+
 for i in range(int(args.plantCount)):
     genplants()
 for i in range(int(args.rabbitCount)):
-    animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100)))
-for i in range(int(args.foxCount)):
-    animals.append(Fox([rand(20, 1780), rand(20, 970)], rand(0, 100)))
+    animals.append(Rabbit([rand(20, 1780), rand(20, 970)]))
+# for i in range(args.foxCount):
+    #animals.append(Fox([rand(20, 1780), rand(20, 970)]))
 
 
 running = True
@@ -365,6 +443,7 @@ running = True
 while running:
     starttime = time.time()
     if args.show:
+        # water()
         #check for break
         events = pygame.event.get()
         for event in events:
@@ -373,21 +452,20 @@ while running:
                     running = False
                 elif event.key == pygame.K_ESCAPE:
                     running = False
-    #execute methods for all animals
     for animal in animals:
         animal.collision()
         animal.clearmates()
         animal.findtarget()
         animal.die()
         animal.starve()
-    #increment all timedependant variables
+
     for animal in animals:
         if args.show:
             animal.draw()
         animal.age += 1
         animal.hung += 2
+#        animal.thurst += 3
         animal.sexd += 4
-    #draw
     if args.show:
         drawplants()
         pygame.display.update()
@@ -395,7 +473,6 @@ while running:
     endtime = time.time()
     foxcounter = 0
     rabbitcounter = 0
-    #matplot i guess
     for animal in animals:
         if isinstance(animal, Rabbit):
             rabbitcounter += 1
@@ -409,10 +486,10 @@ while running:
     x.append(counter)
     rabbitCount.append(rabbitcounter)
     foxCount.append(foxcounter)
-    if counter == int(args.dayCount) or rabbitcounter == 0:
+
+    if counter == int(args.dayCount):
         running = False
         fig, ax1 = plt.subplots()
-        plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         ax1.set_xlabel('time (d)')
         ax1.set_ylabel('Foxes (green)\nRabbits (blue)', color='black')
         ax1.plot(x, foxCount, color='green')
