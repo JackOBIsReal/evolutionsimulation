@@ -56,6 +56,13 @@ functionalPlantCountForFullSizedWindow = 100
 windowHeight = round(990 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
 windowWidth = round(1850 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
 #das hier legt irgendwann mal die Feldgroesse fest
+
+
+try:
+    fig, ax = plt.subplot()
+except:
+    matplotlib.use('Agg')
+
 if args.show:
     dsize = (1850, 990)
     pygame.init()
@@ -455,10 +462,7 @@ while running:
     foxCount.append(foxcounter)
     if counter == int(args.dayCount) or rabbitcounter == 0:
         running = False
-        try:
             fig, ax1 = plt.subplots()
-        except:
-            matplotlib.use('Agg')
             fig, ax1 = plt.subplots()
         plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         ax1.set_xlabel('time (d)')
