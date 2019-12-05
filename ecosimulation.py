@@ -462,8 +462,7 @@ while running:
     foxCount.append(foxcounter)
     if counter == int(args.dayCount) or rabbitcounter == 0:
         running = False
-            fig, ax1 = plt.subplots()
-            fig, ax1 = plt.subplots()
+        fig, ax1 = plt.subplots()
         plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         ax1.set_xlabel('time (d)')
         ax1.set_ylabel('Foxes (green)\nRabbits (blue)', color='black')
