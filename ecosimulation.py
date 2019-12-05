@@ -193,9 +193,9 @@ class Animal:
         else:
             #else normalize vec
             # i forgot to normalize to fucking self.v i guess
-            mx = dx / dy
-            my = dy / dx
-            d = root(mx ** 2 + my ** 2)
+            mx = (dx / (root(dx**2 + dy**2)))*self.v
+            my = (dy / (root(dx**2 + dy**2)))*self.v
+            d = root(mx ** 2 + my ** 2) 
             #move in the respective components
             if dx > 0:
                 self.pos[0] += abs(mx)
@@ -328,11 +328,14 @@ class Rabbit(Animal):
         
         if self.sexd > 25:#self.age > 100:
             for animal in animals:
-                if self.distance(animal) <= self.sens and animal.age > 100:
-                    if isinstance(animal, Rabbit) and self.sex != animal.sex:
+                if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
+                    if animal.age > 100 and self.sex != animal.sex:
                         if self.sex == 1 and self not in animal.ex:
                             #if all criterial met add to patrners
-                            mate.append(animal)
+                            mate.append(animal) 
+                    else:
+                        self.target = animal
+                        self.run()
         if len(mate) != 0:
             #find closest partner
             self.targets[1] = self.findclosest(mate)
@@ -357,6 +360,11 @@ class Rabbit(Animal):
             self.ex.append([self.target, 50])
             self.target.ex.append([self, 50])
             self.fuckedAlready = 6
+
+    def run(self):
+        self.movetargeted()
+            
+            
 
 class Fox(Animal):
     #same for foxes jus other tastes (more deadly)
