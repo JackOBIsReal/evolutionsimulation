@@ -458,8 +458,8 @@ while running:
         try:
             fig, ax1 = plt.subplots()
         except:
-            fig, ax1 = plt.subplots()
             matplotlib.use('Agg')
+            fig, ax1 = plt.subplots()
         plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         ax1.set_xlabel('time (d)')
         ax1.set_ylabel('Foxes (green)\nRabbits (blue)', color='black')
