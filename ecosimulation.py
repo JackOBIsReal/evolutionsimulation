@@ -214,7 +214,7 @@ class Animal:
         val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
         
         if x < val:
-            log("age")
+            log("age" + str(self.__class__.__name__))
             animals.remove(self)
 
     #starve as i please
@@ -222,7 +222,7 @@ class Animal:
         x = random.uniform(0, 2)
         #print x, val, a
         if x < self.hung / dievalue:
-            log("starve")
+            log("starve" + str(self.__class__.__name__))
             animals.remove(self)
 
     #eat palnst or rabbits
@@ -234,6 +234,7 @@ class Animal:
 
         if isinstance(self.target, Rabbit): 
             animals.remove(self.target)
+            log("eaten")
             self.hung -= 50
 
     #find closest potetial target
