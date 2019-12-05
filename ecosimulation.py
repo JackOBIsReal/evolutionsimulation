@@ -5,6 +5,7 @@ parser = argparse.ArgumentParser("")
 parser.add_argument('-s', dest='show', action='store_true', default=False, help="show the simulation live")
 parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish WIP')
 parser.add_argument('-wf', dest='write_to_file', action='store_true', default=False, help='write everything to a file instead of to the console / screen')
+parser.add_argument('-hl', dest='headless', action='store_true', default=False, help='weather the programm is run on a server')
 
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
@@ -18,8 +19,10 @@ import pygame
 import math
 import random
 import time
-import matplotlib.pyplot as plt
 import matplotlib
+if args.headless:
+    matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib import style
 import os
@@ -56,12 +59,6 @@ functionalPlantCountForFullSizedWindow = 100
 windowHeight = round(990 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
 windowWidth = round(1850 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
 #das hier legt irgendwann mal die Feldgroesse fest
-
-
-try:
-    fig, ax = plt.subplot()
-except:
-    matplotlib.use('Agg')
 
 if args.show:
     dsize = (1850, 990)
