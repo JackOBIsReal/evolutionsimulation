@@ -471,5 +471,6 @@ while running:
         fig.tight_layout()
         if not args.write_to_file:
             plt.show()
+            log("test")
         else:
             plt.savefig(logpath + "/plot.png")
