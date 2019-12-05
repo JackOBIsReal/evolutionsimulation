@@ -19,6 +19,7 @@ import math
 import random
 import time
 import matplotlib.pyplot as plt
+import matplotlib
 import matplotlib.animation as animation
 from matplotlib import style
 import os
@@ -62,12 +63,15 @@ if args.show:
 
 if args.write_to_file:
     global logfile
+    global logpath 
     try:
         os.mkdir(args.outputName)
         logfile = open(args.outputName + "/log.txt", "w")
+        logpath = args.outputName
     except:
         os.mkdir(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", ""))
         logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
+        logpath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
 
 def log(string):
     if not args.write_to_file:
@@ -451,7 +455,11 @@ while running:
     foxCount.append(foxcounter)
     if counter == int(args.dayCount) or rabbitcounter == 0:
         running = False
-        fig, ax1 = plt.subplots()
+        try:
+            fig, ax1 = plt.subplots()
+        except:
+            fig, ax1 = plt.subplots()
+            matplotlib.use('Agg')
         plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         ax1.set_xlabel('time (d)')
         ax1.set_ylabel('Foxes (green)\nRabbits (blue)', color='black')
@@ -461,4 +469,7 @@ while running:
         ax1.plot(x, rabbitCount, color = 'blue')
 
         fig.tight_layout()
-        plt.show()
+        if not args.write_to_file:
+            plt.show()
+        else:
+            plt.savefig(logpath + "/plot.png")
