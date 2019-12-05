@@ -17,6 +17,8 @@ import math
 import random
 import time
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from matplotlib import style
 import os
 import sys
 import timeit
@@ -178,6 +180,7 @@ class Animal:
         val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
         
         if x < val:
+            print "age"
             animals.remove(self)
 
     #starve as i please
@@ -185,6 +188,7 @@ class Animal:
         x = random.uniform(0, 2)
         #print x, val, a
         if x < self.hung / dievalue:
+            print "starve"
             animals.remove(self)
 
     #eat palnst or rabbits
@@ -313,7 +317,7 @@ class Rabbit(Animal):
     def mate(self):
         if self.hung / dievalue < 1.5 and self.sexd > 50 and self.fuckedAlready == 0:
             animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100)))
-            self.hung += 25
+            self.hung += 23
             self.sexd -= 50
             self.ex.append([self.target, 50])
             self.target.ex.append([self, 50])
