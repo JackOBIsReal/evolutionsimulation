@@ -4,6 +4,8 @@ import argparse
 parser = argparse.ArgumentParser("")
 parser.add_argument('-s', dest='show', action='store_true', default=False, help="show the simulation live")
 parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish WIP')
+parser.add_argument('-wf', dest='write_to_file', action='store_true', default=False, help='write everything to a file instead of to the console / screen')
+
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
 parser.add_argument('-pc', dest='plantCount', action='store', default=20, help='set the initial amount of plants')
@@ -22,6 +24,7 @@ from matplotlib import style
 import os
 import sys
 import timeit
+import datetime
 
 rand = random.uniform
 root = math.sqrt
@@ -37,18 +40,41 @@ global speed
 global rabbitCount
 global foxCount
 global dievalue
-dievalue = 200
+dievalue = 199
 x = []
 speed = []
 rabbitCount = []
 foxCount = []
 global e 
 e = math.e
+
+
+global windowWidth
+global windowHeight
+functionalPlantCountForFullSizedWindow = 100
+windowHeight = round(990 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
+windowWidth = round(1850 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
+#das hier legt irgendwann mal die Feldgroesse fest
 if args.show:
-    if args.show:
-        dsize = (1850, 990)
-        pygame.init()
-        win = pygame.display.set_mode(dsize)
+    dsize = (1850, 990)
+    pygame.init()
+    win = pygame.display.set_mode(dsize)
+
+if args.write_to_file:
+    global logfile
+    try:
+        os.mkdir(args.outputName)
+        logfile = open(args.outputName + "/log.txt", "w")
+    except:
+        os.mkdir(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", ""))
+        logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
+
+def log(string):
+    if not args.write_to_file:
+        print string
+    else:
+        logfile.write(str(string) + "\n")
+
 
 
 def genplants():
@@ -180,7 +206,7 @@ class Animal:
         val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
         
         if x < val:
-            print "age"
+            log("age")
             animals.remove(self)
 
     #starve as i please
@@ -188,7 +214,7 @@ class Animal:
         x = random.uniform(0, 2)
         #print x, val, a
         if x < self.hung / dievalue:
-            print "starve"
+            log("starve")
             animals.remove(self)
 
     #eat palnst or rabbits
@@ -291,7 +317,7 @@ class Rabbit(Animal):
             else:
                 self.targets[0] = None
         
-        if self.sexd > 30:#self.age > 100:
+        if self.sexd > 25:#self.age > 100:
             for animal in animals:
                 if self.distance(animal) <= self.sens and animal.age > 100:
                     if isinstance(animal, Rabbit) and self.sex != animal.sex:
@@ -315,9 +341,9 @@ class Rabbit(Animal):
             
 
     def mate(self):
-        if self.hung / dievalue < 1.5 and self.sexd > 50 and self.fuckedAlready == 0:
+        if self.hung / dievalue < 1.6 and self.sexd > 50 and self.fuckedAlready == 0:
             animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100)))
-            self.hung += 23
+            self.hung += 20
             self.sexd -= 50
             self.ex.append([self.target, 50])
             self.target.ex.append([self, 50])
@@ -416,9 +442,9 @@ while running:
         elif isinstance(animal, Fox):
             foxcounter += 1
         else:
-            print animal.__class__.__name__
+            log(animal.__class__.__name__)
     counter += 1
-    print str(endtime - starttime) + " " + str(counter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants))
+    log(str(endtime - starttime) + " " + str(counter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants)))
     speed.append((endtime - starttime)*1000)
     x.append(counter)
     rabbitCount.append(rabbitcounter)
