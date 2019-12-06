@@ -106,7 +106,7 @@ class Animal:
         self.v = 5
         self.sens = 300
         self.hung = 50
-
+        self.dir = [None, None]
         self.sexd = 100
         self.fuckedAlready = 0
         self.age = age
@@ -183,19 +183,22 @@ class Animal:
         #check if one of components = 0 because fuck math
         elif dx == 0 and dy > 0:
             self.pos[1] += self.v
+            self.dir = [0, self.v]
         elif dx == 0 and dy < 0:
             self.pos[1] -= self.v
-
+            self.dir = [0, -1*self.v]
         elif dy == 0 and dx > 0:
             self.pos[0] += self.v
+            self.dir = [self.v, 0]
         elif dy == 0 and dx < 0:
             self.pos[1] -= self.v
+            self.dir = [-1*self.v, 0]
         else:
-            #else normalize vec
-            # i forgot to normalize to fucking self.v i guess
-            mx = dx / dy
-            my = dy / dx
-            d = root(mx ** 2 + my ** 2)
+            #else normalize vec 
+            mx = (dx / (root(dx**2 + dy**2)))*self.v
+            my = (dy / (root(dx**2 + dy**2)))*self.v
+            self.dir = [mx, my]
+            d = root(mx ** 2 + my ** 2) 
             #move in the respective components
             if dx > 0:
                 self.pos[0] += abs(mx)
@@ -328,11 +331,14 @@ class Rabbit(Animal):
         
         if self.sexd > 25:#self.age > 100:
             for animal in animals:
-                if self.distance(animal) <= self.sens and animal.age > 100:
-                    if isinstance(animal, Rabbit) and self.sex != animal.sex:
+                if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
+                    if animal.age > 100 and self.sex != animal.sex:
                         if self.sex == 1 and self not in animal.ex:
                             #if all criterial met add to patrners
-                            mate.append(animal)
+                            mate.append(animal) 
+        if isinstance(animal, Fox):
+            self.target = animal
+            self.run()
         if len(mate) != 0:
             #find closest partner
             self.targets[1] = self.findclosest(mate)
@@ -358,6 +364,14 @@ class Rabbit(Animal):
             self.target.ex.append([self, 50])
             self.fuckedAlready = 6
 
+    def run(self):
+        self.movetargeted() 
+        self.dir[0] *= -2
+        self.dir[1] *= -2
+
+        self.pos[0] += self.dir[0]
+        self.pos[1] += self.dir[1]
+
 class Fox(Animal):
     #same for foxes jus other tastes (more deadly)
     def findtarget(self):
@@ -375,7 +389,6 @@ class Fox(Animal):
                     #self.target = self.findclosest(food)
                 elif self.age > 100 and self.sex != animal.sex:
                     if self.sex == 1 and self not in animal.ex:
-                        
                         mate.append(animal)
 
         if len(food) != 0:
