@@ -519,13 +519,31 @@ while running:
         #ax1.plot(x, rabbitCount, color = 'blue')
 
         #fig.tight_layout()
+
+        #trying to plot time developement of speed ditribution
+        x = []
+        y = []
+        z = []
         
         fig = plt.figure()
         ax = fig.add_subplot(111, projection = '3d')
-        x = np.array(birth_time)
-        y = np.array(v_dist)
-        z = np.array(n_v_dist)
-        
+        for i in range(len(birth_time)):
+            for k in range(len(birth_time)):
+                x.append(i)
+                y.append(k)
+        for i in range(len(birth_time)):
+            for k in range(len(birth_time)):
+                z.append(x[k*len(birth_time)-1]*y[i*len(birth_time)-1])
+                #x.append(birth_time[i])
+                #y.append(n_v_dist[k])
+                #z.append(v_dist[i])
+
+        #y = v_dist
+        #z = n_v_dist
+
+
+        for i in range(len(z)):
+            print x[i], y[i], z[i]
         ax.set_xlabel('time in d')
         ax.set_ylabel('speed')
         ax.set_zlabel('number of animals')
