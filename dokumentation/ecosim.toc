@@ -1,3 +1,8 @@
 \contentsline {section}{\numberline {1}Die Simulation}{2}
-\contentsline {subsection}{\numberline {1.1}Methoden}{2}
-\contentsline {section}{\numberline {2}Die Analyse}{2}
+\contentsline {subsection}{\numberline {1.1}Verhalten}{2}
+\contentsline {subsection}{\numberline {1.2}Konzept der Simulation}{2}
+\contentsline {subsection}{\numberline {1.3}Methoden}{2}
+\contentsline {subsubsection}{\numberline {1.3.1}Bewgung}{2}
+\contentsline {subsubsection}{\numberline {1.3.2}Aussuchen eines Ziels}{2}
+\contentsline {subsubsection}{\numberline {1.3.3}Fortpflanzung und Mutation}{2}
+\contentsline {section}{\numberline {2}Die Analyse}{3}

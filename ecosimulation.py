@@ -378,6 +378,7 @@ class Rabbit(Animal):
                                 #if all criterial met add to patrners
                                 mate.append(animal) 
             if self.distance(animal) <= self.sens and isinstance(animal, Fox):
+                #finclosest fox
                 self.target = animal
                 self.run()
         if len(mate) != 0:

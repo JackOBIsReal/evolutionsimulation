@@ -14,7 +14,16 @@
 In diesem Dokument erklären wir wie wir eine Objektorientierte Simualtione eines Ökosystems entwickelt haben, und was für Erkenntinsse sich daraus ziehen lassen.
 Dies ist eine Ojektoirentierte Simulation.
 \end{abstract}
+
 \section{Die Simulation}
+\subsection{Verhalten}
+Alle Tiere haben eine kreisförmiges Sichtfeld was nicht die komplette Karte abdeckt.
+Sie haben alle ein mit der Zeitzunehmdes Bedürfnis sich fortzupflanzen und zu essen.
+Das bedürfnis wird bei der Erfüllung verringert.
+Kaninchen essen pflanzen und Füchse essen Kaninchen.
+Kanienchen fiehen vor Füchsen.
+Die Eigenschaft wie Geschwindigkeit und hunger können mutieren.
+\subsection{Konzept der Simulation}
 Die Simulation basiert auf Objektorientierter Programmierung.
 Es gibt eine Klasse fúr Tiere und je eine Unterklasse für Füchse und für kaninchen.
 Klassen in der Informatik kann man sich vorstellen wie eine Methodenkarte mit derer man beispielsweise ein Kanienchen machen kann.
@@ -22,9 +31,32 @@ Darin gespeichert sind Variablen wie Position oder geschlecht, und Methoden.
 Dies sind funktionen oder Aktionen die das Kaninchen ausführen kann.
 Dies kann z.b. essen, oder Fortpflanzen sein.
 
-Sie haben Instanzvarieblen für Position, Geschlchtecht, Alter, Hunger, Durst, Libido.
+Jedes Tier hat Instanzvarieblen die Position, Geschlchtecht, Alter, Hunger, Eltern, Bewegungsgeschwindigkeit, Sichtradius, Reprudktionsdrang und gespeicherte expartner Feslegen.
 \subsection{Methoden}
-Bewegung, Forpflanzung, Ernrärung, aussuchen des Ziels, Flucht, 
+\subsubsection{Bewgung}
+Jedes Tier hat zwei Arten wie es sich fortbewegn kann.
+Wenn ein bestimmtes Ziel hat Bweget es sich entlang des Vektors von der eigenen Position zum Ziel.
+Dabei ist der Bewegungsvektor auf die BewegungsGeschwindigkeit normiert.
+Kaninchen können außerdem fliehen.
+hierzu wird aber nur die Methoden zum Gezielten bewegen aufgerufen und der Vektor mit -1 mutlipliziert.
+Außerdem können sie sich, wenn sie kein Ziel in sichtweite haben zufälligbewgen.
+
+\subsubsection{Aussuchen eines Ziels}
+Jedes Tier speichert alle Objekte die sich innerhalb des Sichradius befinden.
+Wenn ein Kaninchen ein Fuchs sieht hat die Flucht immer oberste Priorität.
+Es wir der sich am nächsten befindliche Fuchs heraus gesucht und die entgegen gesetzte Richtung als ziel festgelegt.
+
+Anschleißend wir abgewogen.
+Wenn der Wert für den Hunger Größer ist als der Wert fürLibido, wird das nächste essen anwisiert.
+Ist der Hungerwert größer wird der nächste Sexualpartner anvisiert.
+\subsubsection{Fortpflanzung und Mutation}
+Haben sich zwei gefunden wird der Liste der Tiere eine Neue Instanz Derklasse hinzugefügt.
+Bei der Mutierbaren Eingenschaften wird der Durschnit aus den jeweigen werten der Eltern als Mittelwert angenommen.
+Die Wert des Kindes weichen normal verteilt von den Durchschnitt ab.
+
+Die eltern spern sich gegenseitig als ehemalige Parnter ab und betrachten sich anschließen für eine Festgelegte Frist nicht mehr als mögliche patrner.
+
+
 \section{Die Analyse}
 
 
