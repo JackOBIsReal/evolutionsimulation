@@ -130,6 +130,10 @@ class Animal:
         self.hungi = 2
 
     def mutate(self):
+        #round speed to int
+        #save in array
+        #len of array for each speed is n_v_dist
+        #prevent negative speed
         print speed_counter
         #if no parents m = 5
         global speed_counter
@@ -534,7 +538,7 @@ while running:
                 y.append(k)
         for i in range(len(birth_time)):
             for k in range(len(birth_time)):
-                z.append(x[k*len(birth_time)-1]*y[i*len(birth_time)-1])
+                z.append(x[i*len(birth_time)])
                 #x.append(birth_time[i])
                 #y.append(n_v_dist[k])
                 #z.append(v_dist[i])
