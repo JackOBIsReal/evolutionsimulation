@@ -54,7 +54,8 @@ global n_v_dist
 n_v_dist = []
 global speed_counter
 speed_counter = 0
-
+global animal_born
+animal_born = []
 dievalue = 199
 x = []
 speed = []
@@ -133,22 +134,20 @@ class Animal:
         #round speed to int
         #save in array
         #len of array for each speed is n_v_dist
-        #prevent negative speed
-        print speed_counter
         #if no parents m = 5
-        global speed_counter
-        if self.dad == None:
-            v = 5
-        else:
-            x = rand(-5, 5)
-            m = (self.dad.v + self.mome.v) / 2
-            s = 3 #sigma
-            v = 1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2)
+        v = 5
+        #define speed
+        #if self.dad == None:
+        #    m = 5#adjust
+        #else:
+        #    m = (self.dad.v + self.mome.v) / 2
+        #x = rand(-5, 5)
+        #s = 3 #sigma should be abjusted
+        #v = abs(1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2))
 
-        birth_time.append(counter)
-        v_dist.append(v)
-        n_v_dist.append(speed_counter)#number of animals with that speed
-        speed_counter += 1
+        #data for plot
+        animal_born.append([int(v), counter]) 
+
         return v
 
     def resetFuckery(self):
@@ -472,7 +471,8 @@ while running:
                 elif event.key == pygame.K_ESCAPE:
                     running = False
     #execute methods for all animals
-    speed_counter = 0 
+    speed_counter = 0
+    v_dist = []
     for animal in animals:
         animal.resetFuckery()
         animal.collision()
@@ -529,26 +529,34 @@ while running:
         x = []
         y = []
         z = []
-        
+        v = []#index = v, val = anzahl der tiere
+        tmax = 0
         fig = plt.figure()
         ax = fig.add_subplot(111, projection = '3d')
-        for i in range(len(birth_time)):
-            for k in range(len(birth_time)):
-                x.append(i)
-                y.append(k)
-        for i in range(len(birth_time)):
-            for k in range(len(birth_time)):
-                z.append(x[i*len(birth_time)])
-                #x.append(birth_time[i])
-                #y.append(n_v_dist[k])
-                #z.append(v_dist[i])
+        for i in range(len(animal_born)):
+            print animal_born[i][0], len(v)
+            while animal_born[i][0] > len(v):
+                v.append(0)
+        #noch sowas aehnliches fuer t
+        for i  in range(len(animal_born)):
+            if animal_born[i][1] > tmax:
+                tmax = animal_born[i][1]
 
-        #y = v_dist
-        #z = n_v_dist
+        for i in range(len(animal_born)):
+            for k in range(len(v)):
+                if animal_born[i][0] == k:
+                    v[k] += 1
+        for i in range(tmax):
+            x.append(i)
+        for i in range(len(v)):
+            y.append(i)
+            z.append(v[i])
+            
 
 
         for i in range(len(z)):
             print x[i], y[i], z[i]
+        print len(x), len(y), len(z)
         ax.set_xlabel('time in d')
         ax.set_ylabel('speed')
         ax.set_zlabel('number of animals')
