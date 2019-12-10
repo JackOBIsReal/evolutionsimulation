@@ -100,7 +100,7 @@ except:
     logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
     logpath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
 
-if
+
 try:
     os.mkdir('tmp')
 except:
