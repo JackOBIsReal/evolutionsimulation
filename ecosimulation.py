@@ -20,6 +20,7 @@ import math
 import random
 import time
 import matplotlib
+from mpl_toolkits.mplot3d import Axes3D
 if args.headless:
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
