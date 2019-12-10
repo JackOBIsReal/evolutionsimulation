@@ -22,7 +22,9 @@ import math
 import random
 import time
 import matplotlib as plt
+from mpl_toolkits.mplot3d import Axes3D
 if args.headless:
+    import matplotlib
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -31,6 +33,10 @@ import os
 import sys
 import timeit
 import datetime
+
+import cv2
+import numpy as np
+import glob
 
 rand = random.uniform
 root = math.sqrt
@@ -41,7 +47,6 @@ global plants
 plants = []
 global counter
 counter = 0
-global x
 global speed
 global rabbitCount
 global foxCount
@@ -57,7 +62,12 @@ speed_counter = 0
 global animal_born
 animal_born = []
 dievalue = 199
-x = []
+global x_plot
+global y_plot
+global z_plot
+x_plot = []
+y_plot = []
+z_plot = []
 speed = []
 rabbitCount = []
 foxCount = []
@@ -65,6 +75,8 @@ global e
 e = math.e
 global pi
 pi = math.pi
+
+
 
 global windowWidth
 global windowHeight
@@ -78,25 +90,20 @@ if args.show:
     pygame.init()
     win = pygame.display.set_mode(dsize)
 
-if args.write_to_file:
-    global logfile
-    global logpath 
-    try:
-        os.mkdir(args.outputName)
-        logfile = open(args.outputName + "/log.txt", "w")
-        logpath = args.outputName
-    except:
-        os.mkdir(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", ""))
-        logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
-        logpath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
+global logfile
+global logpath 
+try:
+    os.mkdir(args.outputName)
+    logfile = open(args.outputName + "/log.txt", "w")
+    logpath = args.outputName
+except:
+    os.mkdir(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", ""))
+    logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
+    logpath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
 
 def log(string):
-    if not args.write_to_file:
-        print string
-    else:
-        logfile.write(str(string) + "\n")
-
-
+    print string
+    logfile.write(str(string) + "\n")
 
 def genplants():
     x = rand(20, 1830)
@@ -508,12 +515,85 @@ while running:
     log(str(endtime - starttime) + " " + str(counter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants)))
     speed.append((endtime - starttime)*1000)
     #day of sim
-    x.append(counter)
+    # x.append(counter)
     rabbitCount.append(rabbitcounter)
     foxCount.append(foxcounter)
     #the end
+
+    x_plot.append([])
+    y_plot.append([])
+    z_plot.append([])
+
+    iasdf = 0
+    for animal in animals:
+        if isinstance(animal, Rabbit):
+            x_plot[-1].append(animal.v) 
+            y_plot[-1].append(iasdf)
+            z_plot[-1].append(iasdf)
+            iasdf += 1
+    
     if counter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
         running = False
+        img_array = []
+        log('creating images')
+
+        maxx = 0
+        minx = 10000
+        maxy = 0
+        miny = 10000
+        maxz = 0
+        minz = 10000
+        for i in x_plot:
+            for j in i:
+                if maxx <= j:
+                    maxx = j
+                if minx >= j:
+                    minx = j
+                    
+        for i in y_plot:
+            for j in i:
+                if maxy <= j:
+                    maxy = j
+                if miny >= j:
+                    miny = j
+                    
+        for i in z_plot:
+            for j in i:
+                if maxz <= j:
+                    maxz = j
+                if minz >= j:
+                    minz = j
+
+        print maxx, minx, maxy, miny, maxz, minz
+        for i in range(len(x_plot)):
+            log(str(i) + '/' + str(len(x_plot)))
+
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+
+            ax.set_xlim3d(minx, maxx)
+            ax.set_ylim3d(miny, maxy)
+            ax.set_zlim3d(minz, maxz)
+
+            ax.scatter(x_plot[i], y_plot[i], z_plot[i])
+
+            fig.savefig(os.getcwd() + '/tmp/'+ format(i, '010d'), dpi=300)
+
+            plt.close(fig)
+
+        log('creating movie from images')
+        for filename in glob.glob(os.getcwd() + '\\tmp\\*.png'):
+            img = cv2.imread(filename)
+            height, width, layers = img.shape
+            size = (width,height)
+            img_array.append(img)
+
+        out = cv2.VideoWriter(logpath + '/video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+
+        for i in range(len(img_array)):
+            out.write(img_array[i])
+        out.release()       
+        log('done')
         #fig, ax1 = plt.subplots()
         #plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         #ax1.set_xlabel('time (d)')
@@ -526,44 +606,44 @@ while running:
         #fig.tight_layout()
 
         #trying to plot time developement of speed ditribution
-        x = []
-        y = []
-        z = []
-        v = []#index = v, val = anzahl der tiere
-        tmax = 0
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection = '3d')
-        for i in range(len(animal_born)):
-            print animal_born[i][0], len(v)
-            while animal_born[i][0] > len(v):
-                v.append(0)
-        #noch sowas aehnliches fuer t
-        for i  in range(len(animal_born)):
-            if animal_born[i][1] > tmax:
-                tmax = animal_born[i][1]
+        # x = []
+        # y = []
+        # z = []
+        # v = []#index = v, val = anzahl der tiere
+        # tmax = 0
 
-        for i in range(len(animal_born)):
-            for k in range(len(v)):
-                if animal_born[i][0] == k:
-                    v[k] += 1
-        for i in range(tmax):
-            x.append(i)
-        for i in range(len(v)):
-            y.append(i)
-            z.append(v[i])
+
+        # for i in range(len(animal_born)):
+        #     #print animal_born[i][0], len(v)
+        #     while animal_born[i][0] > len(v):
+        #         v.append(0)
+        # #noch sowas aehnliches fuer t
+        # for i in range(len(animal_born)):
+        #     if animal_born[i][1] > tmax:
+        #         tmax = animal_born[i][1]
+
+        # for i in range(len(animal_born)):
+        #     for k in range(len(v)):
+        #         if animal_born[i][0] == k:
+        #             v[k] += 1
+        # for i in range(tmax):
+        #     x.append(i)
+        # for i in range(len(v)):
+        #     y.append(i)
+        #     z.append(v[i])
             
-
-
-        for i in range(len(z)):
-            print x[i], y[i], z[i]
-        print len(x), len(y), len(z)
-        ax.set_xlabel('time in d')
-        ax.set_ylabel('speed')
-        ax.set_zlabel('number of animals')
-        ax.plot_wireframe(x, y, z, rstride = 1, cstride = 1)
+        # fig = plt.figure()
+        # ax = fig.add_subplot(111, projection = '3d')
+        # #for i in range(len(z)):
+        #     #print x[i], y[i], z[i]
+        # print len(x), len(y), len(z)
+        # ax.set_xlabel('time in d')
+        # ax.set_ylabel('speed')
+        # ax.set_zlabel('number of animals')
+        # ax.plot_surface(x, y, z, rstride = 1, cstride = 1)
         
-        if not args.write_to_file:
-            plt.show()
-            log("test")
-        else:
-            plt.savefig(logpath + "/plot.png")
+        # if not args.write_to_file:
+        #     plt.show()
+        #     log("test")
+        # else:
+        #     plt.savefig(logpath + "/plot.png")
