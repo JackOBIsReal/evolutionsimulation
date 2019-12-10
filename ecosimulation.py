@@ -15,12 +15,13 @@ parser.add_argument('-fc', dest='foxCount', action='store', default=20, help='se
 
 args = parser.parse_args()
 
+from mpl_toolkits.mplot3d import axes3d
+import numpy as np
 import pygame
 import math
 import random
 import time
-import matplotlib
-from mpl_toolkits.mplot3d import Axes3D
+import matplotlib as plt
 if args.headless:
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -45,6 +46,16 @@ global speed
 global rabbitCount
 global foxCount
 global dievalue
+global birth_time
+birth_time = []
+global v_dist
+v_dist = []
+global n_v_dist
+n_v_dist = []
+global speed_counter
+speed_counter = 0
+global animal_born
+animal_born = []
 dievalue = 199
 x = []
 speed = []
@@ -52,7 +63,8 @@ rabbitCount = []
 foxCount = []
 global e 
 e = math.e
-
+global pi
+pi = math.pi
 
 global windowWidth
 global windowHeight
@@ -101,10 +113,13 @@ def drawplants():
         pygame.draw.rect(win, (0, 80, 0), (plant[0], plant[1] ,10, 10))
 
 class Animal:
-    def __init__(self, pos, age):
+    def __init__(self, pos, age, dad, mome):
+        #if faster more hunger
         self.pos = pos
         self.sex = bool(random.getrandbits(1))
-        self.v = 5
+        self.dad = dad
+        self.mome = mome
+        self.v = self.mutate()#you got a stroke
         self.sens = 300
         self.hung = 50
         self.dir = [None, None]
@@ -113,6 +128,27 @@ class Animal:
         self.age = age
         self.ex = []
         self.target = None
+        self.hungi = 2
+
+    def mutate(self):
+        #round speed to int
+        #save in array
+        #len of array for each speed is n_v_dist
+        #if no parents m = 5
+        v = 5
+        #define speed
+        #if self.dad == None:
+        #    m = 5#adjust
+        #else:
+        #    m = (self.dad.v + self.mome.v) / 2
+        #x = rand(-5, 5)
+        #s = 3 #sigma should be abjusted
+        #v = abs(1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2))
+
+        #data for plot
+        animal_born.append([int(v), counter]) 
+
+        return v
 
     def resetFuckery(self):
         if self.fuckedAlready > 0:
@@ -292,9 +328,14 @@ class Animal:
     #fuck needs enhancement shitload of it actually
     def mate(self):
         if isinstance(self, Rabbit):
-            animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0))
+            animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target))# please no random position
+            self.hung += 20#rest in animal
+            self.sexd -= 50
+            self.ex.append([self.target, 50])
+            self.target.ex.append([self, 50])
+            self.fuckedAlready = 6
         else:
-            animals.append(Fox([self.pos[0] + 5, self.pos[1] + 5], 0))
+            animals.append(Fox([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target))
         self.sexd -= 50
         self.ex.append([self.target, 50])
         self.target.ex.append([self, 50])
@@ -330,16 +371,19 @@ class Rabbit(Animal):
             else:
                 self.targets[0] = None
         
-        if self.sexd > 25:#self.age > 100:
-            for animal in animals:
-                if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
-                    if animal.age > 100 and self.sex != animal.sex:
-                        if self.sex == 1 and self not in animal.ex:
-                            #if all criterial met add to patrners
-                            mate.append(animal) 
-        if isinstance(animal, Fox):
-            self.target = animal
-            self.run()
+        
+        for animal in animals:
+            if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
+                if self.hung / dievalue < 1.6 and self.sexd > 50 and self.fuckedAlready == 0:
+                    if self.age > 100:
+                        if animal.age > 100 and self.sex != animal.sex:
+                            if self.sex == 1 and self not in animal.ex:
+                                #if all criterial met add to patrners
+                                mate.append(animal) 
+            if self.distance(animal) <= self.sens and isinstance(animal, Fox):
+                #finclosest fox
+                self.target = animal
+                self.run()
         if len(mate) != 0:
             #find closest partner
             self.targets[1] = self.findclosest(mate)
@@ -355,23 +399,14 @@ class Rabbit(Animal):
             self.choosetarget()
             self.movetargeted()
             
-
-    def mate(self):
-        if self.hung / dievalue < 1.6 and self.sexd > 50 and self.fuckedAlready == 0:
-            animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100)))
-            self.hung += 20
-            self.sexd -= 50
-            self.ex.append([self.target, 50])
-            self.target.ex.append([self, 50])
-            self.fuckedAlready = 6
-
-    def run(self):
+    def run(self): 
         self.movetargeted() 
         self.dir[0] *= -2
         self.dir[1] *= -2
 
         self.pos[0] += self.dir[0]
         self.pos[1] += self.dir[1]
+        self.collision()
 
 class Fox(Animal):
     #same for foxes jus other tastes (more deadly)
@@ -415,9 +450,9 @@ class Fox(Animal):
 for i in range(int(args.plantCount)):
     genplants()
 for i in range(int(args.rabbitCount)):
-    animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100)))
+    animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100), None, None))
 for i in range(int(args.foxCount)):
-    animals.append(Fox([rand(20, 1780), rand(20, 970)], rand(0, 100)))
+    animals.append(Fox([rand(20, 1780), rand(20, 970)], rand(0, 100), None, None))
 
 
 running = True
@@ -436,6 +471,8 @@ while running:
                 elif event.key == pygame.K_ESCAPE:
                     running = False
     #execute methods for all animals
+    speed_counter = 0
+    v_dist = []
     for animal in animals:
         animal.resetFuckery()
         animal.collision()
@@ -448,8 +485,8 @@ while running:
         if args.show:
             animal.draw()
         animal.age += 1
-        animal.hung += 2
-        animal.sexd += 4
+        animal.hung += animal.hungi
+        animal.sexd += 4 
     #draw
     if args.show:
         drawplants()
@@ -460,6 +497,7 @@ while running:
     rabbitcounter = 0
     #matplot i guess
     for animal in animals:
+        #count what is fox and Rabbit
         if isinstance(animal, Rabbit):
             rabbitcounter += 1
         elif isinstance(animal, Fox):
@@ -469,21 +507,61 @@ while running:
     counter += 1
     log(str(endtime - starttime) + " " + str(counter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants)))
     speed.append((endtime - starttime)*1000)
+    #day of sim
     x.append(counter)
     rabbitCount.append(rabbitcounter)
     foxCount.append(foxcounter)
-    if counter == int(args.dayCount) or rabbitcounter == 0:
+    #the end
+    if counter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
         running = False
-        fig, ax1 = plt.subplots()
-        plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
-        ax1.set_xlabel('time (d)')
-        ax1.set_ylabel('Foxes (green)\nRabbits (blue)', color='black')
-        ax1.plot(x, foxCount, color='green')
-        ax1.tick_params(axis='y', labelcolor='black')
+        #fig, ax1 = plt.subplots()
+        #plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
+        #ax1.set_xlabel('time (d)')
+        #ax1.set_ylabel('Foxes (green)\nRabbits (blue)', color='black')
+        #ax1.plot(x, foxCount, color='green')
+        #ax1.tick_params(axis='y', labelcolor='black')
         
-        ax1.plot(x, rabbitCount, color = 'blue')
+        #ax1.plot(x, rabbitCount, color = 'blue')
 
-        fig.tight_layout()
+        #fig.tight_layout()
+
+        #trying to plot time developement of speed ditribution
+        x = []
+        y = []
+        z = []
+        v = []#index = v, val = anzahl der tiere
+        tmax = 0
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection = '3d')
+        for i in range(len(animal_born)):
+            print animal_born[i][0], len(v)
+            while animal_born[i][0] > len(v):
+                v.append(0)
+        #noch sowas aehnliches fuer t
+        for i  in range(len(animal_born)):
+            if animal_born[i][1] > tmax:
+                tmax = animal_born[i][1]
+
+        for i in range(len(animal_born)):
+            for k in range(len(v)):
+                if animal_born[i][0] == k:
+                    v[k] += 1
+        for i in range(tmax):
+            x.append(i)
+        for i in range(len(v)):
+            y.append(i)
+            z.append(v[i])
+            
+
+
+        for i in range(len(z)):
+            print x[i], y[i], z[i]
+        print len(x), len(y), len(z)
+        ax.set_xlabel('time in d')
+        ax.set_ylabel('speed')
+        ax.set_zlabel('number of animals')
+        ax.plot_wireframe(x, y, z, rstride = 1, cstride = 1)
+        
         if not args.write_to_file:
             plt.show()
             log("test")
