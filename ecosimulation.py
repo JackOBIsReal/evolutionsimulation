@@ -6,6 +6,7 @@ parser.add_argument('-s', dest='show', action='store_true', default=False, help=
 parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish WIP')
 parser.add_argument('-wf', dest='write_to_file', action='store_true', default=False, help='write everything to a file instead of to the console / screen')
 parser.add_argument('-hl', dest='headless', action='store_true', default=False, help='weather the programm is run on a server')
+parser.add_argument('-sp', dest='skip_plot', action='store_true', default=False, help='Skip the plotting and output as video')
 
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
@@ -99,6 +100,7 @@ except:
     logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
     logpath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
 
+if
 try:
     os.mkdir('tmp')
 except:
@@ -537,71 +539,73 @@ while running:
     
     if counter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
         running = False
-        img_array = []
-        log('creating images')
+        if not skip_plot:
+            img_array = []
+            log('creating images')
 
-        maxx = 0
-        minx = 10000
-        maxy = 0
-        miny = 10000
-        maxz = 0
-        minz = 10000
-        for i in x_plot:
-            for j in i:
-                if maxx <= j:
-                    maxx = j
-                if minx >= j:
-                    minx = j
-                    
-        for i in y_plot:
-            for j in i:
-                if maxy <= j:
-                    maxy = j
-                if miny >= j:
-                    miny = j
-                    
-        for i in z_plot:
-            for j in i:
-                if maxz <= j:
-                    maxz = j
-                if minz >= j:
-                    minz = j
+            maxx = 0
+            minx = 10000
+            maxy = 0
+            miny = 10000
+            maxz = 0
+            minz = 10000
+            for i in x_plot:
+                for j in i:
+                    if maxx <= j:
+                        maxx = j
+                    if minx >= j:
+                        minx = j
+                        
+            for i in y_plot:
+                for j in i:
+                    if maxy <= j:
+                        maxy = j
+                    if miny >= j:
+                        miny = j
+                        
+            for i in z_plot:
+                for j in i:
+                    if maxz <= j:
+                        maxz = j
+                    if minz >= j:
+                        minz = j
 
-        print maxx, minx, maxy, miny, maxz, minz
-        for i in range(len(x_plot)):
-            log(str(i) + '/' + str(len(x_plot)))
+            print maxx, minx, maxy, miny, maxz, minz
+            for i in range(len(x_plot)):
+                log(str(i) + '/' + str(len(x_plot)))
 
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            plt.title('Startwerte:\nFuechse: ' + str(args.foxCount) + ' Hasen: ' + str(args.rabbitCount) + ' Pflanzen: ' + str(args.plantCount) + '\nHasen: Blau, Fuechse: Rot')
-            ax.set_xlim3d(minx, maxx)
-            ax.set_xlabel('speed')
-            ax.set_ylim3d(miny, maxy)
-            ax.set_ylabel('rabbit count')
-            ax.set_zlim3d(minz, maxz)
-            ax.set_zlabel('rabbit count')
-            ax.scatter(x_plot[i], y_plot[i], z_plot[i])
+                fig = plt.figure()
+                ax = fig.add_subplot(111, projection='3d')
+                plt.title('Startwerte:\nFuechse: ' + str(args.foxCount) + ' Hasen: ' + str(args.rabbitCount) + ' Pflanzen: ' + str(args.plantCount) + '\nHasen: Blau, Fuechse: Rot')
+                ax.set_xlim3d(minx, maxx)
+                ax.set_xlabel('speed')
+                ax.set_ylim3d(miny, maxy)
+                ax.set_ylabel('rabbit count')
+                ax.set_zlim3d(minz, maxz)
+                ax.set_zlabel('rabbit count')
+                ax.scatter(x_plot[i], y_plot[i], z_plot[i])
 
-            fig.savefig(os.getcwd() + '/tmp/'+ format(i, '010d'), dpi=300)
+                fig.savefig(os.getcwd() + '/tmp/'+ format(i, '010d'), dpi=300)
 
-            plt.close(fig)
+                plt.close(fig)
 
-        log('creating movie from images')
-        for filename in glob.glob(os.getcwd() + '\\tmp\\*.png'):
-            img = cv2.imread(filename)
-            height, width, layers = img.shape
-            size = (width,height)
-            img_array.append(img)
+            log('creating movie from images')
+            size = 0
+            for filename in glob.glob(os.getcwd() + '\\tmp\\*.png'):
+                img = cv2.imread(filename)
+                height, width, layers = img.shape
+                size = (width,height)
+                img_array.append(img)
 
-        out = cv2.VideoWriter(logpath + '/video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+            out = cv2.VideoWriter(logpath + '/video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
 
-        for i in range(len(img_array)):
-            out.write(img_array[i])
-        out.release()       
-        log('cleaning up')
+            for i in range(len(img_array)):
+                out.write(img_array[i])
+            out.release()       
+            log('cleaning up')
 
-        import shutil
-        shutil.rmtree('tmp')
+            import shutil
+            shutil.rmtree('tmp')
         #fig, ax1 = plt.subplots()
         #plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         #ax1.set_xlabel('time (d)')
