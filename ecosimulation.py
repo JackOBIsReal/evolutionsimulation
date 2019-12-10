@@ -76,8 +76,6 @@ e = math.e
 global pi
 pi = math.pi
 
-
-
 global windowWidth
 global windowHeight
 functionalPlantCountForFullSizedWindow = 100
@@ -100,6 +98,11 @@ except:
     os.mkdir(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", ""))
     logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
     logpath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
+
+try:
+    os.mkdir('tmp')
+except:
+    pass
 
 def log(string):
     print string
@@ -570,11 +573,13 @@ while running:
 
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
-
+            plt.title('Startwerte:\nFuechse: ' + str(args.foxCount) + ' Hasen: ' + str(args.rabbitCount) + ' Pflanzen: ' + str(args.plantCount) + '\nHasen: Blau, Fuechse: Rot')
             ax.set_xlim3d(minx, maxx)
+            ax.set_xlabel('speed')
             ax.set_ylim3d(miny, maxy)
+            ax.set_ylabel('rabbit count')
             ax.set_zlim3d(minz, maxz)
-
+            ax.set_zlabel('rabbit count')
             ax.scatter(x_plot[i], y_plot[i], z_plot[i])
 
             fig.savefig(os.getcwd() + '/tmp/'+ format(i, '010d'), dpi=300)
@@ -593,7 +598,10 @@ while running:
         for i in range(len(img_array)):
             out.write(img_array[i])
         out.release()       
-        log('done')
+        log('cleaning up')
+
+        import shutil
+        shutil.rmtree('tmp')
         #fig, ax1 = plt.subplots()
         #plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         #ax1.set_xlabel('time (d)')
