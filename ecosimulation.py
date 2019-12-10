@@ -539,7 +539,7 @@ while running:
     
     if counter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
         running = False
-        if not skip_plot:
+        if not args.skip_plot:
             img_array = []
             log('creating images')
 
