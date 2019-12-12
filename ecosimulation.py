@@ -609,13 +609,10 @@ while running:
                 size = (width,height)
                 img_array.append(img)
 
-<<<<<<< HEAD
+
             out = cv2.VideoWriter(logpath + '/video.avi', cv2.cv.CV_FOURCC(*'DIVX'), 15, size)
 
-=======
-            out = cv2.VideoWriter(logpath + '/video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
-            print size
->>>>>>> 047073c3b70fe5e0a66c82d02743e50b43b13e0b
+            print si
             for i in range(len(img_array)):
                 out.write(img_array[i])
             out.release()       
