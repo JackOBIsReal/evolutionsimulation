@@ -150,15 +150,15 @@ class Animal:
         #save in array
         #len of array for each speed is n_v_dist
         #if no parents m = 5
-        v = 5
+        #v = 5
         #define speed
-        #if self.dad == None:
-        #    m = 5#adjust
-        #else:
-        #    m = (self.dad.v + self.mome.v) / 2
-        #x = rand(-5, 5)
-        #s = 3 #sigma should be abjusted
-        #v = abs(1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2))
+        if self.dad == None:
+            m = 5#adjust
+        else:
+            m = (self.dad.v + self.mome.v) / 2
+        x = rand(-5, 5)
+        s = 3 #sigma should be abjusted
+        v = abs(1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2))
 
         #data for plot
         animal_born.append([int(v), counter]) 
