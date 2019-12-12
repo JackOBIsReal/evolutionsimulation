@@ -83,9 +83,9 @@ functionalPlantCountForFullSizedWindow = 100
 windowHeight = round(990 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
 windowWidth = round(1850 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
 #das hier legt irgendwann mal die Feldgroesse fest
-
+global dsize
+dsize = (1850, 990)
 if args.show:
-    dsize = (1850, 990)
     pygame.init()
     win = pygame.display.set_mode(dsize)
 
@@ -134,7 +134,7 @@ class Animal:
         self.dad = dad
         self.mome = mome
         if self.mome == None:
-            self.pos = [rand(frame), rand(frame)]
+            self.pos = [rand(0, dsize[0]), rand(0, dsize[1])]
         else:
             self.pos = [self.mome.pos[0], self.mome.pos[1]]
         self.mutate()
@@ -169,9 +169,9 @@ class Animal:
         sv = 3 #sigma should be abjusted
         sh = 3 #sigma should be abjusted
         ss = 3 #sigma should be abjusted
-        v = abs(1/(sv*root(2*pi))*e**((-1/2)*((xv-m)/sv)**2))
-        h = abs(1/(sh*root(2*pi))*e**((-1/2)*((xh-m)/sh)**2))
-        s = abs(1/(ss*root(2*pi))*e**((-1/2)*((xs-m)/ss)**2))
+        v = abs(1/(sv*root(2*pi))*e**((-1/2)*((xv-mv)/sv)**2))
+        h = abs(1/(sh*root(2*pi))*e**((-1/2)*((xh-mh)/sh)**2))
+        s = abs(1/(ss*root(2*pi))*e**((-1/2)*((xs-ms)/ss)**2))
         if v + h + s <= val:
             self.v = v
             self.hungi = h
