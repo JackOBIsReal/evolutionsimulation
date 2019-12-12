@@ -106,9 +106,12 @@ try:
 except:
     pass
 
+def logToFile(string):
+    logfile.write(str(string) + "\n")
+
 def log(string):
     print string
-    logfile.write(str(string) + "\n")
+    logToFile(string)
 
 def genplants():
     x = rand(20, 1830)
@@ -147,15 +150,15 @@ class Animal:
         #save in array
         #len of array for each speed is n_v_dist
         #if no parents m = 5
-        v = 5
+        #v = 5
         #define speed
-        #if self.dad == None:
-        #    m = 5#adjust
-        #else:
-        #    m = (self.dad.v + self.mome.v) / 2
-        #x = rand(-5, 5)
-        #s = 3 #sigma should be abjusted
-        #v = abs(1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2))
+        if self.dad == None:
+            m = 5#adjust
+        else:
+            m = (self.dad.v + self.mome.v) / 2
+        x = rand(-5, 5)
+        s = 3 #sigma should be abjusted
+        v = abs(1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2))
 
         #data for plot
         animal_born.append([int(v), counter]) 
@@ -570,9 +573,15 @@ while running:
                     if minz >= j:
                         minz = j
 
-            print maxx, minx, maxy, miny, maxz, minz
+            toolbar_width = 40
+            toolbar_progress_current = 0
+
+            sys.stdout.write("[%s]" % (" " * toolbar_width))
+            sys.stdout.flush()
+            sys.stdout.write("\b" * (toolbar_width+1))
+
             for i in range(len(x_plot)):
-                log(str(i) + '/' + str(len(x_plot)))
+                #log(str(i) + '/' + str(len(x_plot)))
 
                 fig = plt.figure()
                 ax = fig.add_subplot(111, projection='3d')
@@ -589,16 +598,27 @@ while running:
 
                 plt.close(fig)
 
+                if math.floor(i/len(x_plot)) != toolbar_progress_current:
+                    toolbar_progress_current = i/len(x_plot)
+                    sys.stdout.write("-")
+                    sys.stdout.flush()
+
             log('creating movie from images')
             size = 0
-            for filename in glob.glob(os.getcwd() + '\\tmp\\*.png'):
+            for filename in glob.glob(os.getcwd() + '/tmp/*.png'):
+                print filename
                 img = cv2.imread(filename)
                 height, width, layers = img.shape
                 size = (width,height)
                 img_array.append(img)
 
+<<<<<<< HEAD
             out = cv2.VideoWriter(logpath + '/video.avi', cv2.cv.CV_FOURCC(*'DIVX'), 15, size)
 
+=======
+            out = cv2.VideoWriter(logpath + '/video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+            print size
+>>>>>>> 047073c3b70fe5e0a66c82d02743e50b43b13e0b
             for i in range(len(img_array)):
                 out.write(img_array[i])
             out.release()       
@@ -606,6 +626,7 @@ while running:
 
             import shutil
             shutil.rmtree('tmp')
+            log('finished')
         #fig, ax1 = plt.subplots()
         #plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
         #ax1.set_xlabel('time (d)')
