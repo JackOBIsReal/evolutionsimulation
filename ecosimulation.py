@@ -143,15 +143,11 @@ class Animal:
         self.age = age
         self.ex = []
         self.target = None
-        self.hungi = 2
+        #self.hungi = 2
 
     def mutate(self):
-        #round speed to int
-        #save in array
-        #len of array for each speed is n_v_dist
-        #if no parents m = 5
-        #v = 5
         #define speed
+        val = 50#ballance value to be adjusted
         if self.dad == None:
             m = 5#adjust
         else:
@@ -159,7 +155,8 @@ class Animal:
         x = rand(-5, 5)
         s = 3 #sigma should be abjusted
         v = abs(1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2))
-
+        self.hungi = val/v
+        self.sexdi = 2
         #data for plot
         animal_born.append([int(v), counter]) 
 
@@ -501,7 +498,7 @@ while running:
             animal.draw()
         animal.age += 1
         animal.hung += animal.hungi
-        animal.sexd += 4 
+        animal.sexd += animal.sexdi
     #draw
     if args.show:
         drawplants()
@@ -627,56 +624,3 @@ while running:
             import shutil
             shutil.rmtree('tmp')
             log('finished')
-        #fig, ax1 = plt.subplots()
-        #plt.title("Startwerte:\nHasen: " + str(args.rabbitCount) + " Fuechse: " + str(args.foxCount) + " Pflanzen: " + str(args.plantCount))
-        #ax1.set_xlabel('time (d)')
-        #ax1.set_ylabel('Foxes (green)\nRabbits (blue)', color='black')
-        #ax1.plot(x, foxCount, color='green')
-        #ax1.tick_params(axis='y', labelcolor='black')
-        
-        #ax1.plot(x, rabbitCount, color = 'blue')
-
-        #fig.tight_layout()
-
-        #trying to plot time developement of speed ditribution
-        # x = []
-        # y = []
-        # z = []
-        # v = []#index = v, val = anzahl der tiere
-        # tmax = 0
-
-
-        # for i in range(len(animal_born)):
-        #     #print animal_born[i][0], len(v)
-        #     while animal_born[i][0] > len(v):
-        #         v.append(0)
-        # #noch sowas aehnliches fuer t
-        # for i in range(len(animal_born)):
-        #     if animal_born[i][1] > tmax:
-        #         tmax = animal_born[i][1]
-
-        # for i in range(len(animal_born)):
-        #     for k in range(len(v)):
-        #         if animal_born[i][0] == k:
-        #             v[k] += 1
-        # for i in range(tmax):
-        #     x.append(i)
-        # for i in range(len(v)):
-        #     y.append(i)
-        #     z.append(v[i])
-            
-        # fig = plt.figure()
-        # ax = fig.add_subplot(111, projection = '3d')
-        # #for i in range(len(z)):
-        #     #print x[i], y[i], z[i]
-        # print len(x), len(y), len(z)
-        # ax.set_xlabel('time in d')
-        # ax.set_ylabel('speed')
-        # ax.set_zlabel('number of animals')
-        # ax.plot_surface(x, y, z, rstride = 1, cstride = 1)
-        
-        # if not args.write_to_file:
-        #     plt.show()
-        #     log("test")
-        # else:
-        #     plt.savefig(logpath + "/plot.png")
