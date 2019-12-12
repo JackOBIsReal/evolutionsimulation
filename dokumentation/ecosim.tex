@@ -11,21 +11,25 @@
 \tableofcontents
 \newpage
 \begin{abstract}
-In diesem Dokument erklären wir wie wir eine numerische Simualtion eines Ökosystems entwickelt haben, und was für Erkenntinsse sich daraus ziehen lassen.
-Die Simulation basiert auf Objektoirentierte Programmierung und simuliert die Wechselwirkung zwischen kanienchen und Fuechsen.
+In diesem Dokument erklären wir, wie wir eine numerische Simulation eines
+	Ökosystems entwickelt haben, und was für Erkenntnisse sich daraus ziehen lassen.
+Die Simulation basiert auf Objektorientierter Programmierung und simuliert die Wechselwirkung zwischen Kaninchen und Fuechsen.
 \end{abstract}
 
 \section{Die Simulation}
 \subsection{Verhalten}
-Alle Tiere haben eine kreisförmiges Sichtfeld was nicht die komplette Karte abdeckt.
-Sie haben alle ein mit der Zeitzunehmdes Bedürfnis sich fortzupflanzen und zu essen.
-Das bedürfnis wird bei der Erfüllung verringert.
+Alle Tiere haben eine kreisförmiges Sichtfeld, was nicht die komplette Karte abdeckt.
+Sie haben alle ein, mit der Zeit zunehmendes, Bedürfnis sich fortzupflanzen und zu essen.
+Das Bedürfnis wird bei der Erfüllung verringert.
 Kaninchen essen pflanzen und Füchse essen Kaninchen.
-Kanienchen fiehen vor Füchsen.
-Die Eigenschaft Geschwindigkeit, Libdo und hunger können mutieren.
+Kaninchen fliehen vor Füchsen.
+Jedes Individuum ist eine Instanz einer Klasse, und hat individuelle
+Eigenschaften die als Instanzvariablen bezeichnet werden.
+Dies sind Dinge wie Position, Hungerstatus, Geschlecht usw.
+
 \subsection{Konzept der Simulation}
 Die Simulation basiert auf Objektorientierter Programmierung.
-Es gibt eine Klasse fúr Tiere und je eine Unterklasse für Füchse und für kaninchen.
+Es gibt eine Klasse fuer Tiere und je eine Unterklasse für Füchse und für kaninchen.
 Klassen in der Informatik kann man sich vorstellen wie eine Methodenkarte mit derer man beispielsweise ein Kanienchen machen kann.
 Darin gespeichert sind Variablen wie Position oder geschlecht, und Methoden.
 Dies sind funktionen oder Aktionen die das Kaninchen ausführen kann.
