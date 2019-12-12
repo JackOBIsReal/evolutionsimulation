@@ -156,7 +156,7 @@ class Animal:
         s = 3 #sigma should be abjusted
         v = abs(1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2))
         self.hungi = val/v
-        elf.sexdi = 2
+        self.sexdi = 2
         #data for plot
         animal_born.append([int(v), counter]) 
 
