@@ -128,13 +128,16 @@ def drawplants():
         pygame.draw.rect(win, (0, 80, 0), (plant[0], plant[1] ,10, 10))
 
 class Animal:
-    def __init__(self, pos, age, dad, mome):
+    def __init__(self, age, dad, mome):
         #if faster more hunger
-        self.pos = pos
         self.sex = bool(random.getrandbits(1))
         self.dad = dad
         self.mome = mome
-        self.v = self.mutate()#you got a stroke
+        if self.mome == None:
+            self.pos = [rand(frame), rand(frame)]
+        else:
+            self.pos = [self.mome.pos[0], self.mome.pos[1]]
+        self.mutate()
         self.sens = 300
         self.hung = 50
         self.dir = [None, None]
@@ -146,21 +149,54 @@ class Animal:
         #self.hungi = 2
 
     def mutate(self):
+        
         #define speed
-        val = 50#ballance value to be adjusted
-        if self.dad == None:
-            m = 5#adjust
+        val = 150#ballance value to be adjusted
+        if self.dad == None or self.mome == None:
+            mv = 5#adjust
+            mh = 2
+            ms = 2 
         else:
-            m = (self.dad.v + self.mome.v) / 2
-        x = rand(-5, 5)
-        s = 3 #sigma should be abjusted
-        v = abs(1/(s*root(2*pi))*e**((-1/2)*((x-m)/s)**2))
-        self.hungi = val/v
-        self.sexdi = 2
+            mv = (self.dad.v + self.mome.v) / 2
+            mh = (self.dad.hungi + self.mome.hungi) / 2
+            ms = (self.dad.sexdi + self.mome.sexdi) / 2
+
+        #adjust
+        xv = rand(-5, 5)
+        xh = rand(-5, 5)
+        xs = rand(-5, 5)
+
+        sv = 3 #sigma should be abjusted
+        sh = 3 #sigma should be abjusted
+        ss = 3 #sigma should be abjusted
+        v = abs(1/(sv*root(2*pi))*e**((-1/2)*((xv-m)/sv)**2))
+        h = abs(1/(sh*root(2*pi))*e**((-1/2)*((xh-m)/sh)**2))
+        s = abs(1/(ss*root(2*pi))*e**((-1/2)*((xs-m)/ss)**2))
+        if v + h + s <= val:
+            self.v = v
+            self.hungi = h
+            self.sexdi = s
+        else:
+            traits = [v, h, s]
+            temp = random.randint(0,2)
+            alt = val - traits[(tmp+1)%3] - traits[(tmp+2)%3]
+            while alt <= 0:
+                xv = rand(-5, 5)
+                xh = rand(-5, 5)
+                xs = rand(-5, 5)
+                v = abs(1/(sv*root(2*pi))*e**((-1/2)*((xv-m)/sv)**2))
+                h = abs(1/(sh*root(2*pi))*e**((-1/2)*((xh-m)/sh)**2))
+                s = abs(1/(ss*root(2*pi))*e**((-1/2)*((xs-m)/ss)**2))
+                traits = [v, h, s]
+                temp = random.randint(0,2)
+                alt = val - traits[(tmp+1)%3] - traits[(tmp+2)%3]
+            self.v = v
+            self.hungi = h
+            self.sexdi = s
+#sum of parameters can't be more than val
+
         #data for plot
         animal_born.append([int(v), counter]) 
-
-        return v
 
     def resetFuckery(self):
         if self.fuckedAlready > 0:
@@ -462,9 +498,9 @@ class Fox(Animal):
 for i in range(int(args.plantCount)):
     genplants()
 for i in range(int(args.rabbitCount)):
-    animals.append(Rabbit([rand(20, 1780), rand(20, 970)], rand(0, 100), None, None))
+    animals.append(Rabbit(rand(0, 100), None, None))
 for i in range(int(args.foxCount)):
-    animals.append(Fox([rand(20, 1780), rand(20, 970)], rand(0, 100), None, None))
+    animals.append(Fox(rand(0, 100), None, None))
 
 
 running = True
