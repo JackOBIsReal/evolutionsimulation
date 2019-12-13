@@ -1,3 +1,7 @@
 rm -r ~/evolutionsimulation/simulationOutput*
-python ecosimulation.py -hl
-
+rm -r ~/simulationOutput*
+python ecosimulation.py -hl &
+python ecosimulation.py -hl &
+python ecosimulation.py -hl &
+python ecosimulation.py -hl &
+python ecosimulation.py -hl &
