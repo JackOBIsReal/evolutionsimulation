@@ -360,14 +360,14 @@ class Animal:
     def mate(self):
         if isinstance(self, Rabbit):
             animals.append(Rabbit(0, self, self.target))# TODO
-            #add this part also for foxes
-            self.hung += 20#rest in animal
-            self.fuckedAlready = 6
         else:
-            animals.append(Fox([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target))
-        self.sexd -= 50
-        self.ex.append([self.target, 50])
-        self.target.ex.append([self, 50])
+            animals.append(Fox([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target)) # TODO wieder das mit den Eltern
+            
+        self.hung += 20 # rest in animal TODO
+        self.fuckedAlready = 6 # TODO
+        self.sexd -= 50 # TODO
+        self.ex.append([self.target, 50]) # TODO
+        self.target.ex.append([self, 50]) # TODO
     
     #remove saved partners after cetrain time
     def clearmates(self):
@@ -376,9 +376,7 @@ class Animal:
             if ex[1] <= 0:
                 self.ex.remove(ex)
 
-
 class Rabbit(Animal):
-    
     #find target for self
     def findtarget(self):
         #initiate / reset variables
@@ -387,12 +385,12 @@ class Rabbit(Animal):
         mate = []
 
         self.targets = [None]*2
-        d = True
+        direction = True
         
-        if self.hung / hungerScalar < 1.5:
+        if self.hung / float(hungerScalar) > 0.25: # TODO
             for plant in plants:
                 if self.distance(plant) <= self.sens:
-                    d = False
+                    direction = False
                     food.append(plant)
                     #check this
             if len(food) != 0:
@@ -401,34 +399,34 @@ class Rabbit(Animal):
                 self.targets[0] = None
         
         
-        for animal in animals:
-            if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
-                if self.hung / hungerScalar < 1.6 and self.sexd > 50 and self.fuckedAlready == 0:
-                    if self.age > 100:
+        if self.hung / hungerScalar < 1.6 and self.sexd > 50 and self.fuckedAlready == 0:
+            if self.age > 100:
+                for animal in animals:
+                    if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
                         if animal.age > 100 and self.sex != animal.sex:
                             if self.sex == 1 and self not in animal.ex:
                                 #if all criterial met add to patrners
                                 mate.append(animal) 
-            if self.distance(animal) <= self.sens and isinstance(animal, Fox):
-                #finclosest fox
-                self.target = animal
-                self.run()
-        if len(mate) != 0:
+                    elif self.distance(animal) <= self.sens and isinstance(animal, Fox):
+                        #finclosest fox
+                        self.target = animal
+                        self.run()
+                        
+        if len(mate) != 0: # TODO
             #find closest partner
             self.targets[1] = self.findclosest(mate)
-            d = False
-
+            direction = False
         else:
             self.targets[1] = None
 
-        if d:
+        if direction:
             #if nothing in reach
             self.moverandom()
         else:
             self.choosetarget()
             self.movetargeted()
             
-    def run(self): 
+    def run(self): # RUN! da dadadadadadadadadadadadad daaa dadadadadaddaadadada
         self.movetargeted() 
         self.dir[0] *= -2
         self.dir[1] *= -2
@@ -444,12 +442,12 @@ class Fox(Animal):
         food = []
         mate = []
         self.targets = [None]*2
-        d = True
+        direction = True
+        
         
         for animal in animals:
             if self.distance(animal.pos) <= self.sens:
                 if isinstance(animal, Rabbit):
-                    
                     food.append(animal)
                     #self.target = self.findclosest(food)
                 elif self.age > 100 and self.sex != animal.sex:
@@ -458,17 +456,17 @@ class Fox(Animal):
 
         if len(food) != 0:
             self.targets[0] = self.findclosest(food)
-            d = False
+            direction = False
         else:
             self.targets[0] = None
         
         if len(mate) != 0:
             self.targets[1] = self.findclosest(mate)
-            d = False
+            direction = False
         else:
             self.targets[1] = None
 
-        if d: 
+        if direction: 
             self.moverandom()
         else:
             
@@ -476,6 +474,7 @@ class Fox(Animal):
             self.movetargeted()
 
 #you didn't comment either
+#well, you got a point...
 for i in range(int(args.plantCount)):
     genplant()
 for i in range(int(args.rabbitCount)):
