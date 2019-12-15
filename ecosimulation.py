@@ -8,6 +8,7 @@ parser.add_argument('-r', dest='repeat', action='store_true', default=False, hel
 parser.add_argument('-wf', dest='write_to_file', action='store_true', default=False, help='write everything to a file instead of to the console / screen')
 parser.add_argument('-hl', dest='headless', action='store_true', default=False, help='weather the programm is run on a server')
 parser.add_argument('-sp', dest='skip_plot', action='store_true', default=False, help='Skip the plotting and output as video')
+parser.add_argument('-dr', dest='count_death_reason', action='store_true', default=False, help='list the death reasons of the animals')
 
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-fps', dest='fps', action='store', default=15, help='set the fps count of the output videos')
@@ -80,6 +81,13 @@ global e
 e = math.e
 global pi
 pi = math.pi
+
+global ageCount
+global starveCount
+global eatCount
+ageCount = [0] * 2
+starveCount = [0] * 2
+eatCount = 0
 
 global windowWidth
 global windowHeight
@@ -309,6 +317,10 @@ class Animal:
         val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
         
         if x < val:
+            if isinstance(self, Rabbit):
+                ageCount[0] += 1
+            else:
+                ageCount[1] += 1
             log("age" + str(self.__class__.__name__))
             animals.remove(self)
 
@@ -317,6 +329,10 @@ class Animal:
         x = random.uniform(0, 2)
         #print x, val, a
         if x < self.hung / dievalue:
+            if isinstance(self, Rabbit):
+                starveCount[0] += 1
+            else:
+                starveCount[1] += 1
             log("starve" + str(self.__class__.__name__))
             animals.remove(self)
 
@@ -330,6 +346,7 @@ class Animal:
         if isinstance(self.target, Rabbit): 
             animals.remove(self.target)
             log("eaten")
+            eatCount += 1
             self.hung -= 50
 
     #find closest potetial target
@@ -683,4 +700,7 @@ while running:
 
             import shutil
             shutil.rmtree('tmp')
+            
+            infofile = open(logpath + "/info.txt", "w")
+            infofile.write('[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
             log('finished')
