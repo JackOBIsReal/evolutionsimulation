@@ -359,7 +359,7 @@ class Animal:
     #fuck needs enhancement shitload of it actually TODO
     def mate(self):
         if isinstance(self, Rabbit):
-            animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target))# Use parents for position
+            animals.append(Rabbit(0, self, self.target))# TODO
             #add this part also for foxes
             self.hung += 20#rest in animal
             self.fuckedAlready = 6
