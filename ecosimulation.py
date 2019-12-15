@@ -398,8 +398,7 @@ class Rabbit(Animal):
             else:
                 self.targets[0] = None
         
-        
-        if self.hung / hungerScalar < 1.6 and self.sexd > 50 and self.fuckedAlready == 0:
+        if self.hung / hungerScalar < 1.6 and self.sexd > 50 and self.fuckedAlready == 0: # TODO lauft immer weg
             if self.age > 100:
                 for animal in animals:
                     if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
@@ -443,9 +442,8 @@ class Fox(Animal):
         mate = []
         self.targets = [None]*2
         direction = True
-        
-        
-        for animal in animals:
+
+        for animal in animals: # TODO hunger einbauen
             if self.distance(animal.pos) <= self.sens:
                 if isinstance(animal, Rabbit):
                     food.append(animal)
@@ -469,12 +467,13 @@ class Fox(Animal):
         if direction: 
             self.moverandom()
         else:
-            
             self.choosetarget()
             self.movetargeted()
 
 #you didn't comment either
 #well, you got a point...
+
+#vorbereitung echte Simulation
 for i in range(int(args.plantCount)):
     genplant()
 for i in range(int(args.rabbitCount)):
@@ -503,18 +502,21 @@ while running:
         animal.resetFuckery()
         animal.collision()
         animal.clearmates()
-        animal.findtarget()
         animal.die()
         animal.starve()
+    
+    for animal in animals:
+        animal.findtarget()
     #increment all timedependant variables
     for animal in animals:
         if args.show or args.pygame_to_file:
             animal.draw()
+            print animal.v
         animal.age += 1
         animal.hung += animal.hungi
         animal.sexd += animal.sexdi
     #draw
-    if args.show or args.pygame_to_file:
+    if args.show or args.pygame_to_file: # TODO
         drawplants()
         if args.show:
             pygame.display.update()
