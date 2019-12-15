@@ -2,13 +2,15 @@ import argparse
 
 #using argparse to get the information about language, folder and text from CLI
 parser = argparse.ArgumentParser("")
-parser.add_argument('-s', dest='show', action='store_true', default=False, help="show the simulation live")
+parser.add_argument('-s', dest='show', action='store_true', default=False, help="show the simulation live. Overwrites -pgtf.")
+parser.add_argument('-pgtf', dest='pygame_to_file', action='store_true', default=False, help='save the pygame images as a file instead of rendering them on screen')
 parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish WIP')
 parser.add_argument('-wf', dest='write_to_file', action='store_true', default=False, help='write everything to a file instead of to the console / screen')
 parser.add_argument('-hl', dest='headless', action='store_true', default=False, help='weather the programm is run on a server')
 parser.add_argument('-sp', dest='skip_plot', action='store_true', default=False, help='Skip the plotting and output as video')
 
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
+parser.add_argument('-fps', dest='fps', action='store', default=15, help='set the fps count of the output videos')
 parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
 parser.add_argument('-pc', dest='plantCount', action='store', default=20, help='set the initial amount of plants')
 parser.add_argument('-rc', dest='rabbitCount', action='store', default=20, help='set the initial amount of rabbits')
@@ -18,7 +20,9 @@ args = parser.parse_args()
 
 from mpl_toolkits.mplot3d import axes3d
 import numpy as np
-import pygame
+import re
+if args.show or args.pygame_to_file:
+    import pygame
 import math
 import random
 import time
@@ -86,8 +90,11 @@ windowWidth = round(1850 / float(functionalPlantCountForFullSizedWindow) * math.
 global dsize
 dsize = (1850, 990)
 if args.show:
-    pygame.init()
-    win = pygame.display.set_mode(dsize)
+    #pygame.init()
+    win = pygame.display.set_mode(dsize, 0, 32)
+elif args.pygame_to_file:
+    win = pygame.Surface(dsize)
+
 
 global logfile
 global logpath 
@@ -120,7 +127,7 @@ def genplants():
     ay = y + 10
     plants.append([x, y])
 
-    if args.show:
+    if args.show or args.pygame_to_file:
         drawplants()
 
 def drawplants():
@@ -510,7 +517,7 @@ running = True
 while running:
     starttime = time.time()
     if args.show:
-        #check for break
+        # check for break
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -530,15 +537,18 @@ while running:
         animal.starve()
     #increment all timedependant variables
     for animal in animals:
-        if args.show:
+        if args.show or args.pygame_to_file:
             animal.draw()
         animal.age += 1
         animal.hung += animal.hungi
         animal.sexd += animal.sexdi
     #draw
-    if args.show:
+    if args.show or args.pygame_to_file:
         drawplants()
-        pygame.display.update()
+        if args.show:
+            pygame.display.update()
+        elif args.pygame_to_file:
+            pygame.image.save(win, "tmp/1" + format(counter, '010d') + ".png")
         win.fill((0, 255, 0))
     endtime = time.time()
     foxcounter = 0
@@ -569,14 +579,13 @@ while running:
     for animal in animals:
         if isinstance(animal, Rabbit):
             x_plot[-1].append(animal.v) 
-            y_plot[-1].append(iasdf)
-            z_plot[-1].append(iasdf)
+            y_plot[-1].append(animal.hungi)
+            z_plot[-1].append(animal.sexdi)
             iasdf += 1
     
     if counter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
         running = False
         if not args.skip_plot:
-            img_array = []
             log('creating images')
 
             maxx = 0
@@ -622,9 +631,9 @@ while running:
                 ax.set_xlim3d(minx, maxx)
                 ax.set_xlabel('speed')
                 ax.set_ylim3d(miny, maxy)
-                ax.set_ylabel('rabbit count')
+                ax.set_ylabel('hunger resistance')
                 ax.set_zlim3d(minz, maxz)
-                ax.set_zlabel('rabbit count')
+                ax.set_zlabel('sexdrive')
                 ax.scatter(x_plot[i], y_plot[i], z_plot[i])
 
                 fig.savefig(os.getcwd() + '/tmp/'+ format(i, '010d'), dpi=300)
@@ -638,19 +647,38 @@ while running:
 
             log('creating movie from images')
             size = 0
+            img_array = []
             for filename in glob.glob(os.getcwd() + '/tmp/*.png'):
-                print filename
-                img = cv2.imread(filename)
-                height, width, layers = img.shape
-                size = (width,height)
-                img_array.append(img)
+                trueName = re.split('\\\|/', filename)[-1][0]
+                if trueName == '0':
+                    img = cv2.imread(filename)
+                    height, width, layers = img.shape
+                    size = (width,height)
+                    img_array.append(img)
 
-
-            out = cv2.VideoWriter(logpath + '/video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+            out = cv2.VideoWriter(logpath + '/video.avi', cv2.VideoWriter_fourcc(*'DIVX'), int(args.fps), size)
 
             for i in range(len(img_array)):
                 out.write(img_array[i])
-            out.release()       
+            out.release()      
+
+            size = 0
+            img_array = []
+
+            for filename in glob.glob(os.getcwd() + '/tmp/*.png'):
+                trueName = re.split('\\\|/', filename)[-1][0]
+                if trueName == '1':
+                    img = cv2.imread(filename)
+                    height, width, layers = img.shape
+                    size = (width,height)
+                    img_array.append(img) 
+
+            out = cv2.VideoWriter(logpath + '/video2.avi', cv2.VideoWriter_fourcc(*'DIVX'), int(args.fps), size)
+
+            for i in range(len(img_array)):
+                out.write(img_array[i])
+            out.release()
+
             log('cleaning up')
 
             import shutil
