@@ -60,10 +60,6 @@ global dayCounter
 dayCounter = 0
 global speed # in millisekunden die die deltaZeit
 speed = []
-global rabbitCount # Anzahl hasen/fuechse
-rabbitCount = []
-global foxCount
-foxCount = []
 global hungerScalar
 hungerScalar = 199
 global x_plot #axis of plot
@@ -537,25 +533,19 @@ while running:
             log(animal.__class__.__name__)
     dayCounter += 1
     log(str(endtime - starttime) + " " + str(dayCounter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants)))
-    speed.append((endtime - starttime)*1000)
-    #day of sim
-    # x.append(dayCounter)
-    rabbitCount.append(rabbitcounter)
-    foxCount.append(foxcounter)
-    #the end
-
+    
     x_plot.append([])
     y_plot.append([])
     z_plot.append([])
 
-    iasdf = 0
     for animal in animals:
         if isinstance(animal, Rabbit):
             x_plot[-1].append(animal.v) 
             y_plot[-1].append(animal.hungi)
             z_plot[-1].append(animal.sexdi)
-            iasdf += 1
-    
+
+    speed.append((endtime - starttime)*1000)
+
     if dayCounter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
         running = False
         if not args.skip_plot:
@@ -588,7 +578,7 @@ while running:
                     if minz >= j:
                         minz = j
 
-            toolbar_width = 40
+            toolbar_width = 40 # TODO
             toolbar_progress_current = 0
 
             sys.stdout.write("[%s]" % (" " * toolbar_width))
@@ -596,9 +586,7 @@ while running:
             sys.stdout.write("\b" * (toolbar_width+1))
 
             for i in range(len(x_plot)):
-                #log(str(i) + '/' + str(len(x_plot)))
-
-                fig = plt.figure()
+                fig = plt.figure() # TODO fuechse einbauen
                 ax = fig.add_subplot(111, projection='3d')
                 plt.title('Startwerte:\nFuechse: ' + str(args.foxCount) + ' Hasen: ' + str(args.rabbitCount) + ' Pflanzen: ' + str(args.plantCount) + '\nHasen: Blau, Fuechse: Rot')
                 ax.set_xlim3d(minx, maxx)
@@ -657,6 +645,6 @@ while running:
             import shutil
             shutil.rmtree('tmp')
             
-            infofile = open(outputPath + "/info.txt", "w")
+            infofile = open(outputPath + "/info.txt", "w") # TODO zeitliche auflösung
             infofile.write('[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
             log('finished')
