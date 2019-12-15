@@ -151,7 +151,7 @@ class Animal:
         if self.mome == None:
             self.pos = [rand(0, dsize[0]), rand(0, dsize[1])]
         else:
-            self.pos = [self.mome.pos[0], self.mome.pos[1]]
+            self.pos = [self.mome.pos[0]+10, self.mome.pos[1]+10]
         self.mutate()
         self.sens = 300
         self.hung = 50
@@ -180,7 +180,7 @@ class Animal:
         xv = rand(-5, 5)
         xh = rand(-5, 5)
         xs = rand(-5, 5)
-
+        #use invers on some of th traits
         sv = 3 #sigma should be abjusted
         sh = 3 #sigma should be abjusted
         ss = 3 #sigma should be abjusted
@@ -400,11 +400,9 @@ class Animal:
     #fuck needs enhancement shitload of it actually
     def mate(self):
         if isinstance(self, Rabbit):
-            animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target))# please no random position
+            animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target))# Use parents for position
+            #add this part also for foxes
             self.hung += 20#rest in animal
-            self.sexd -= 50
-            self.ex.append([self.target, 50])
-            self.target.ex.append([self, 50])
             self.fuckedAlready = 6
         else:
             animals.append(Fox([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target))
