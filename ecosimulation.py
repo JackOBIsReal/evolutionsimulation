@@ -89,36 +89,29 @@ if args.show:
 elif args.pygame_to_file:
     win = pygame.Surface(dsize)
 
-
 global logfile
-global logpath 
+global outputPath 
 try:
     os.mkdir(args.outputName)
     logfile = open(args.outputName + "/log.txt", "w")
-    logpath = args.outputName
+    outputPath = args.outputName
 except:
     os.mkdir(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", ""))
     logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
-    logpath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
-
+    outputPath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
 
 try:
     os.mkdir('tmp')
 except:
     pass
 
-def logToFile(string):
+def log(string): #logs to console and file
+    print string
     logfile.write(str(string) + "\n")
 
-def log(string):
-    print string
-    logToFile(string)
-
-def genplants():
-    x = rand(20, 1830)
-    y = rand(20, 970)
-    ax = x + 10
-    ay = y + 10
+def genplant(): #generates the plant
+    x = rand(20, dsize[0] - 20)
+    y = rand(20, dsize[1] - 20)
     plants.append([x, y])
 
     if args.show or args.pygame_to_file:
@@ -139,7 +132,7 @@ class Animal:
         else:
             self.pos = [self.mome.pos[0]+10, self.mome.pos[1]+10]
         self.mutate()
-        self.sens = 300
+        self.sens = 300 # TODO austarieren
         self.hung = 50
         self.dir = [None, None]
         self.sexd = 100
@@ -147,14 +140,12 @@ class Animal:
         self.age = age
         self.ex = []
         self.target = None
-        #self.hungi = 2
 
     def mutate(self):
-        
-        #define speed
-        val = 150#ballance value to be adjusted
+        # define speed
+        val = 150 # ballance value to be adjusted TODO
         if self.dad == None or self.mome == None:
-            mv = 5#adjust
+            mv = 5 # adjust TODO
             mh = 2
             ms = 2 
         else:
@@ -162,14 +153,14 @@ class Animal:
             mh = (self.dad.hungi + self.mome.hungi) / 2
             ms = (self.dad.sexdi + self.mome.sexdi) / 2
 
-        #adjust
+        #adjust TODO
         xv = rand(-5, 5)
         xh = rand(-5, 5)
         xs = rand(-5, 5)
         #use invers on some of th traits
-        sv = 3 #sigma should be abjusted
-        sh = 3 #sigma should be abjusted
-        ss = 3 #sigma should be abjusted
+        sv = 3 #sigma should be abjusted TODO
+        sh = 3 #sigma should be abjusted TODO
+        ss = 3 #sigma should be abjusted TODO
         v = abs(1/(sv*root(2*pi))*e**((-1/2)*((xv-mv)/sv)**2))
         h = abs(1/(sh*root(2*pi))*e**((-1/2)*((xh-mh)/sh)**2))
         s = abs(1/(ss*root(2*pi))*e**((-1/2)*((xs-ms)/ss)**2))
@@ -180,7 +171,7 @@ class Animal:
         else:
             traits = [v, h, s]
             temp = random.randint(0,2)
-            alt = val - traits[(tmp+1)%3] - traits[(tmp+2)%3]
+            alt = val - traits[(temp+1)%3] - traits[(temp+2)%3]
             while alt <= 0:
                 xv = rand(-5, 5)
                 xh = rand(-5, 5)
@@ -190,11 +181,11 @@ class Animal:
                 s = abs(1/(ss*root(2*pi))*e**((-1/2)*((xs-m)/ss)**2))
                 traits = [v, h, s]
                 temp = random.randint(0,2)
-                alt = val - traits[(tmp+1)%3] - traits[(tmp+2)%3]
+                alt = val - traits[(temp+1)%3] - traits[(temp+2)%3]
             self.v = v
             self.hungi = h
             self.sexdi = s
-#sum of parameters can't be more than val
+            #sum of parameters can't be more than val
 
     def resetFuckery(self):
         if self.fuckedAlready > 0:
@@ -227,14 +218,10 @@ class Animal:
         
         if self.pos[1] < 20:
             self.pos[1] = 20
-        if self.pos[0] > 1780:
-            self.pos[0] = 1780
-        if self.pos[1] > 970:
-            self.pos[1] = 970
-        #check water
-        #warning
-        ax = self.pos[0] + 10
-        ay = self.pos[1] + 10
+        if self.pos[0] > dsize[0] - 20:
+            self.pos[0] = dsize[0] - 20 
+        if self.pos[1] > dsize[1] - 20:
+            self.pos[1] = dsize[1] - 20
     
     #move towards self.target
     def movetargeted(self):
@@ -263,25 +250,14 @@ class Animal:
                 if isinstance(self.target, Fox) and self.sex != self.target.sex: 
                     #fuck other foxes
                     self.mate()
-        #check if one of components = 0 because fuck math
-        elif dx == 0 and dy > 0:
-            self.pos[1] += self.v
-            self.dir = [0, self.v]
-        elif dx == 0 and dy < 0:
-            self.pos[1] -= self.v
-            self.dir = [0, -1*self.v]
-        elif dy == 0 and dx > 0:
-            self.pos[0] += self.v
-            self.dir = [self.v, 0]
-        elif dy == 0 and dx < 0:
-            self.pos[1] -= self.v
-            self.dir = [-1*self.v, 0]
+       
         else:
             #else normalize vec 
             mx = (dx / (root(dx**2 + dy**2)))*self.v
             my = (dy / (root(dx**2 + dy**2)))*self.v
             self.dir = [mx, my]
             d = root(mx ** 2 + my ** 2) 
+            
             #move in the respective components
             if dx > 0:
                 self.pos[0] += abs(mx)
@@ -305,40 +281,39 @@ class Animal:
             else:
                 ageCount[1] += 1
             log("age" + str(self.__class__.__name__))
-            animals.remove(self)
+            animals.remove(self) # i used the stones to destroy the stones
 
     #starve as i please
     def starve(self):
         x = random.uniform(0, 2)
         #print x, val, a
-        if x < self.hung / hungerScalar:
+        if x < self.hung / hungerScalar: # TODO
             if isinstance(self, Rabbit):
                 starveCount[0] += 1
             else:
                 starveCount[1] += 1
             log("starve" + str(self.__class__.__name__))
-            animals.remove(self)
+            animals.remove(self) # i used the stones to destroy the stones
 
     #eat palnst or rabbits
     def eat(self):
         if self.target in plants:
             plants.remove(self.target)
-            genplants()
-            self.hung -= 50
+            genplant()
+            self.hung -= 50 # TODO
 
         if isinstance(self.target, Rabbit): 
             animals.remove(self.target)
             log("eaten")
             eatCount += 1
-            self.hung -= 50
+            self.hung -= 50 # TODO
 
     #find closest potetial target
     def findclosest(self, targets):
-        #wtf
         if type(targets[0]) == int or type(targets[0]) == float:
             return targets
         #set stupid high number
-        closest = [None, 6757865]
+        closest = [None, dsize[0]**2]
         for target in targets:
             #if anything is closer than previous replace
             if isinstance(target, Animal):
@@ -380,7 +355,8 @@ class Animal:
                 if self.targets[1] != None:
                     self.target = self.targets[1]
                     break
-    #fuck needs enhancement shitload of it actually
+
+    #fuck needs enhancement shitload of it actually TODO
     def mate(self):
         if isinstance(self, Rabbit):
             animals.append(Rabbit([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target))# Use parents for position
@@ -501,7 +477,7 @@ class Fox(Animal):
 
 #you didn't comment either
 for i in range(int(args.plantCount)):
-    genplants()
+    genplant()
 for i in range(int(args.rabbitCount)):
     animals.append(Rabbit(rand(0, 100), None, None))
 for i in range(int(args.foxCount)):
@@ -652,7 +628,7 @@ while running:
                     size = (width,height)
                     img_array.append(img)
 
-            out = cv2.VideoWriter(logpath + '/video.avi', cv2.VideoWriter_fourcc(*'DIVX'), int(args.fps), size)
+            out = cv2.VideoWriter(outputPath + '/video.avi', cv2.VideoWriter_fourcc(*'DIVX'), int(args.fps), size)
 
             for i in range(len(img_array)):
                 out.write(img_array[i])
@@ -669,7 +645,7 @@ while running:
                     size = (width,height)
                     img_array.append(img) 
 
-            out = cv2.VideoWriter(logpath + '/video2.avi', cv2.VideoWriter_fourcc(*'DIVX'), int(args.fps), size)
+            out = cv2.VideoWriter(outputPath + '/video2.avi', cv2.VideoWriter_fourcc(*'DIVX'), int(args.fps), size)
 
             for i in range(len(img_array)):
                 out.write(img_array[i])
@@ -680,6 +656,6 @@ while running:
             import shutil
             shutil.rmtree('tmp')
             
-            infofile = open(logpath + "/info.txt", "w")
+            infofile = open(outputPath + "/info.txt", "w")
             infofile.write('[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
             log('finished')
