@@ -44,59 +44,45 @@ import cv2
 import numpy as np
 import glob
 
+#mathematische Vereinfachungen
 rand = random.uniform
 root = math.sqrt
-
-global animals
-animals = []
-global plants
-plants = []
-global counter
-counter = 0
-global speed
-global rabbitCount
-global foxCount
-global dievalue
-global birth_time
-birth_time = []
-global v_dist
-v_dist = []
-global n_v_dist
-n_v_dist = []
-global speed_counter
-speed_counter = 0
-global animal_born
-animal_born = []
-dievalue = 199
-global x_plot
-global y_plot
-global z_plot
-x_plot = []
-y_plot = []
-z_plot = []
-speed = []
-rabbitCount = []
-foxCount = []
 global e 
 e = math.e
 global pi
 pi = math.pi
 
+global animals
+animals = []
+global plants
+plants = []
+global dayCounter
+dayCounter = 0
+global speed # in millisekunden die die deltaZeit
+speed = []
+global rabbitCount # Anzahl hasen/fuechse
+rabbitCount = []
+global foxCount
+foxCount = []
+global hungerScalar
+hungerScalar = 199
+global x_plot #axis of plot
+x_plot = []
+global y_plot
+y_plot = []
+global z_plot
+z_plot = []
+
 global ageCount
-global starveCount
-global eatCount
 ageCount = [0] * 2
+global starveCount
 starveCount = [0] * 2
+global eatCount
 eatCount = 0
 
-global windowWidth
-global windowHeight
-functionalPlantCountForFullSizedWindow = 100
-windowHeight = round(990 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
-windowWidth = round(1850 / float(functionalPlantCountForFullSizedWindow) * math.sqrt(float(args.plantCount)))
-#das hier legt irgendwann mal die Feldgroesse fest
 global dsize
 dsize = (1850, 990)
+
 if args.show:
     #pygame.init()
     win = pygame.display.set_mode(dsize, 0, 32)
@@ -209,9 +195,6 @@ class Animal:
             self.hungi = h
             self.sexdi = s
 #sum of parameters can't be more than val
-
-        #data for plot
-        animal_born.append([int(v), counter]) 
 
     def resetFuckery(self):
         if self.fuckedAlready > 0:
@@ -328,7 +311,7 @@ class Animal:
     def starve(self):
         x = random.uniform(0, 2)
         #print x, val, a
-        if x < self.hung / dievalue:
+        if x < self.hung / hungerScalar:
             if isinstance(self, Rabbit):
                 starveCount[0] += 1
             else:
@@ -430,7 +413,7 @@ class Rabbit(Animal):
         self.targets = [None]*2
         d = True
         
-        if self.hung / dievalue < 1.5:
+        if self.hung / hungerScalar < 1.5:
             for plant in plants:
                 if self.distance(plant) <= self.sens:
                     d = False
@@ -444,7 +427,7 @@ class Rabbit(Animal):
         
         for animal in animals:
             if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
-                if self.hung / dievalue < 1.6 and self.sexd > 50 and self.fuckedAlready == 0:
+                if self.hung / hungerScalar < 1.6 and self.sexd > 50 and self.fuckedAlready == 0:
                     if self.age > 100:
                         if animal.age > 100 and self.sex != animal.sex:
                             if self.sex == 1 and self not in animal.ex:
@@ -541,8 +524,6 @@ while running:
                 elif event.key == pygame.K_ESCAPE:
                     running = False
     #execute methods for all animals
-    speed_counter = 0
-    v_dist = []
     for animal in animals:
         animal.resetFuckery()
         animal.collision()
@@ -563,7 +544,7 @@ while running:
         if args.show:
             pygame.display.update()
         elif args.pygame_to_file:
-            pygame.image.save(win, "tmp/1" + format(counter, '010d') + ".png")
+            pygame.image.save(win, "tmp/1" + format(dayCounter, '010d') + ".png")
         win.fill((0, 255, 0))
     endtime = time.time()
     foxcounter = 0
@@ -577,11 +558,11 @@ while running:
             foxcounter += 1
         else:
             log(animal.__class__.__name__)
-    counter += 1
-    log(str(endtime - starttime) + " " + str(counter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants)))
+    dayCounter += 1
+    log(str(endtime - starttime) + " " + str(dayCounter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants)))
     speed.append((endtime - starttime)*1000)
     #day of sim
-    # x.append(counter)
+    # x.append(dayCounter)
     rabbitCount.append(rabbitcounter)
     foxCount.append(foxcounter)
     #the end
@@ -598,7 +579,7 @@ while running:
             z_plot[-1].append(animal.sexdi)
             iasdf += 1
     
-    if counter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
+    if dayCounter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
         running = False
         if not args.skip_plot:
             log('creating images')
