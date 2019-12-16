@@ -13,6 +13,12 @@ parser.add_argument('-dr', dest='count_death_reason', action='store_true', defau
 
 parser.add_argument('-sens', dest='tarierung_sens', default=300)
 parser.add_argument('-mv', dest='tarierung_mv', default=10.0)
+parser.add_argument('-hungerscalar', dest='tarierung_hungerscalar', default=199)
+parser.add_argument('-essUntergrenze', dest='tarierung_essUntergrenze', default=0.25)
+parser.add_argument('-trs', dest='tarierung_rabbit_esshunger', default=50)
+parser.add_argument('-tfs', dest='tarierung_fox_esshunger', default=50)
+parser.add_argument('-fa', dest='tarierung_fuckedAlready', default=300)
+parser.add_argument('-mv', dest='tarierung_mv', default=10.0)
 
 
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
@@ -66,7 +72,7 @@ dayCounter = 0
 global speed # in millisekunden die die deltaZeit
 speed = []
 global hungerScalar
-hungerScalar = 199
+hungerScalar = args.tarierung_hungerscalar
 global x_plot #axis of plot
 x_plot = []
 global y_plot
@@ -293,14 +299,14 @@ try:
             if self.target in plants:
                 plants.remove(self.target)
                 genplant()
-                self.hung -= 50 # TODO
+                self.hung -= args.tarierung_rabbit_esshunger # TODO
 
             if isinstance(self.target, Rabbit): 
                 animals.remove(self.target)
                 log("eaten")
                 global eatCount #TODO
                 eatCount += 1
-                self.hung -= 50 # TODO
+                self.hung -= args.tarierung_fox_esshunger # TODO
 
         #find closest potetial target
         def findclosest(self, targets):
@@ -358,7 +364,7 @@ try:
                 animals.append(Fox(0, self, self.target)) # TODO wieder das mit den Eltern
                 
             self.hung += 20 # rest in animal TODO
-            self.fuckedAlready = 6 # TODO
+            self.fuckedAlready = args.tarierung_fuckedAlready # TODO
             self.sexd -= 50 # TODO
             self.ex.append([self.target, 50]) # TODO
             self.target.ex.append([self, 50]) # TODO
@@ -381,7 +387,7 @@ try:
             self.targets = [None]*2
             direction = True
             
-            if self.hung / float(hungerScalar) > 0.25: # TODO
+            if self.hung / float(hungerScalar) > args.tarierung_essUntergrenze: # TODO
                 for plant in plants:
                     if self.distance(plant) <= self.sens:
                         direction = False
