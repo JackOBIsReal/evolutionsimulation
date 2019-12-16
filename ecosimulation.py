@@ -439,7 +439,10 @@ try:
                 else:
                     ageCount[1] += 1
                 log("age" + str(self.__class__.__name__))
-                animals.remove(self) # i used the stones to destroy the stones
+                animals.remove(self)
+                return True
+            else:
+                return False
     class Fox(Animal):
         #same for foxes jus other tastes (more deadly)
         def findtarget(self):
@@ -520,9 +523,10 @@ try:
             animal.resetFuckery()
             animal.collision()
             animal.clearmates()
-            animal.die()
+            death = animal.die()
             #er ist verhungert obwohl we schon an alter gestorben ist
-            animal.starve()
+            if not death:
+                animal.starve()
         
         for animal in animals:
             animal.findtarget()
