@@ -513,6 +513,7 @@ try:
             animal.collision()
             animal.clearmates()
             animal.die()
+            #er ist verhungert obwohl we schon an alter gestorben ist
             animal.starve()
         
         for animal in animals:
