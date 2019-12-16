@@ -16,7 +16,7 @@ try:
 except Exception as e:
     print e
 finally:
-    os.system('echo \"' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)'\" >> long-term-output.txt')
+    os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'" >> long-term-output.txt')
     print pc
     print rc
     print fc
