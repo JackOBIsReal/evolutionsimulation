@@ -566,7 +566,8 @@ try:
         if dayCounter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
             running = False
 
-except KeyboardInterrupt:
+except Exception as e:
+    log(e)
     pass
 if not args.skip_plot:
     try:
