@@ -230,6 +230,12 @@ try:
             else: 
                 dx = self.target[0] - self.pos[0]
                 dy = self.target[1] - self.pos[1]
+
+            #else normalize vec 
+            mx = (dx / (root(dx**2 + dy**2)))*self.v
+            my = (dy / (root(dx**2 + dy**2)))*self.v
+            self.dir = [mx, my]
+            d = root(mx ** 2 + my ** 2) 
             #if self.target is closer than one step
             if self.distance(self.target) < self.v:
                 #if self is rabbit
@@ -250,11 +256,6 @@ try:
                         self.mate()
         
             else:
-                #else normalize vec 
-                mx = (dx / (root(dx**2 + dy**2)))*self.v
-                my = (dy / (root(dx**2 + dy**2)))*self.v
-                self.dir = [mx, my]
-                d = root(mx ** 2 + my ** 2) 
                 
                 #move in the respective components
                 if dx > 0:
@@ -386,18 +387,19 @@ try:
                 else:
                     self.targets[0] = None
             
-            if self.hung / hungerScalar < 1.6 and self.sexd > 50 and self.fuckedAlready == 0: # TODO lauft immer weg
-                if self.age > 50:
-                    for animal in animals:
+            for animal in animals:
+                if self.hung / hungerScalar < 1.6 and self.sexd > 50 and self.fuckedAlready == 0:
+                    if self.age > 50:
                         if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
                             if animal.age > 50 and self.sex != animal.sex:
                                 if self.sex == 1 and self not in animal.ex:
                                     #if all criterial met add to patrners
                                     mate.append(animal) 
-                        elif self.distance(animal) <= self.sens and isinstance(animal, Fox):
-                            #finclosest fox
-                            self.target = animal
-                            self.run()
+                if self.distance(animal) <= self.sens and isinstance(animal, Fox):
+                    #finclosest fox
+                    self.target = animal
+                    self.movetargeted()
+                    self.run()
                             
             if len(mate) != 0: # TODO
                 #find closest partner
