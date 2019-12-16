@@ -1,111 +1,116 @@
+import argparse
+import traceback
+
+#using argparse to get the information about language, folder and text from CLI
+parser = argparse.ArgumentParser("")
+parser.add_argument('-s', dest='show', action='store_true', default=False, help="show the simulation live. Overwrites -pgtf.")
+parser.add_argument('-pgtf', dest='pygame_to_file', action='store_true', default=False, help='save the pygame images as a file instead of rendering them on screen')
+parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish WIP')
+parser.add_argument('-wf', dest='write_to_file', action='store_true', default=False, help='write everything to a file instead of to the console / screen')
+parser.add_argument('-hl', dest='headless', action='store_true', default=False, help='weather the programm is run on a server')
+parser.add_argument('-sp', dest='skip_plot', action='store_true', default=False, help='Skip the plotting and output as video')
+parser.add_argument('-dr', dest='count_death_reason', action='store_true', default=False, help='list the death reasons of the animals')
+
+parser.add_argument('-sens', dest='tarierung_sens', default=300)
+parser.add_argument('-mv', dest='tarierung_mv', default=10.0)
+
+
+parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
+parser.add_argument('-fps', dest='fps', action='store', default=15, help='set the fps count of the output videos')
+parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
+parser.add_argument('-pc', dest='plantCount', action='store', default=20, help='set the initial amount of plants')
+parser.add_argument('-rc', dest='rabbitCount', action='store', default=20, help='set the initial amount of rabbits')
+parser.add_argument('-fc', dest='foxCount', action='store', default=20, help='set the initial amount of foxes')
+
+args = parser.parse_args()
+
+from mpl_toolkits.mplot3d import axes3d
+import numpy as np
+import re
+if args.show or args.pygame_to_file:
+    import pygame
+import math
+import random
+import time
+import matplotlib as plt
+from mpl_toolkits.mplot3d import Axes3D
+if args.headless:
+    import matplotlib
+    matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from matplotlib import style
+import os
+import sys
+import timeit
+import datetime
+
+import cv2
+import numpy as np
+import glob
+
+#mathematische Vereinfachungen
+rand = random.uniform
+root = math.sqrt
+global e 
+e = math.e
+global pi
+pi = math.pi
+
+global animals
+animals = []
+global plants
+plants = []
+global dayCounter
+dayCounter = 0
+global speed # in millisekunden die die deltaZeit
+speed = []
+global hungerScalar
+hungerScalar = 199
+global x_plot #axis of plot
+x_plot = []
+global y_plot
+y_plot = []
+global z_plot
+z_plot = []
+
+global ageCount
+ageCount = [0] * 2
+global starveCount
+starveCount = [0] * 2
+global eatCount
+eatCount = 0
+
+global dsize
+dsize = (1850, 990)
+
+if args.show:
+    #pygame.init()
+    win = pygame.display.set_mode(dsize, 0, 32)
+elif args.pygame_to_file:
+    win = pygame.Surface(dsize)
+
+global logfile
+global outputPath 
 try:
-    import argparse
+    os.mkdir(args.outputName)
+    logfile = open(args.outputName + "/log.txt", "w")
+    outputPath = args.outputName
+except:
+    os.mkdir(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", ""))
+    logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
+    outputPath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
 
-    #using argparse to get the information about language, folder and text from CLI
-    parser = argparse.ArgumentParser("")
-    parser.add_argument('-s', dest='show', action='store_true', default=False, help="show the simulation live. Overwrites -pgtf.")
-    parser.add_argument('-pgtf', dest='pygame_to_file', action='store_true', default=False, help='save the pygame images as a file instead of rendering them on screen')
-    parser.add_argument('-r', dest='repeat', action='store_true', default=False, help='repeat after finish WIP')
-    parser.add_argument('-wf', dest='write_to_file', action='store_true', default=False, help='write everything to a file instead of to the console / screen')
-    parser.add_argument('-hl', dest='headless', action='store_true', default=False, help='weather the programm is run on a server')
-    parser.add_argument('-sp', dest='skip_plot', action='store_true', default=False, help='Skip the plotting and output as video')
-    parser.add_argument('-dr', dest='count_death_reason', action='store_true', default=False, help='list the death reasons of the animals')
+try:
+    os.mkdir(outputPath + '/tmp')
+except:
+    pass
 
-    parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
-    parser.add_argument('-fps', dest='fps', action='store', default=15, help='set the fps count of the output videos')
-    parser.add_argument('-c', dest='dayCount', action='store', default=300, help='cutoff day')
-    parser.add_argument('-pc', dest='plantCount', action='store', default=20, help='set the initial amount of plants')
-    parser.add_argument('-rc', dest='rabbitCount', action='store', default=20, help='set the initial amount of rabbits')
-    parser.add_argument('-fc', dest='foxCount', action='store', default=20, help='set the initial amount of foxes')
+def log(string): #logs to console and file
+    print string
+    logfile.write(str(string) + "\n")
 
-    args = parser.parse_args()
-
-    from mpl_toolkits.mplot3d import axes3d
-    import numpy as np
-    import re
-    if args.show or args.pygame_to_file:
-        import pygame
-    import math
-    import random
-    import time
-    import matplotlib as plt
-    from mpl_toolkits.mplot3d import Axes3D
-    if args.headless:
-        import matplotlib
-        matplotlib.use('Agg')
-    import matplotlib.pyplot as plt
-    import matplotlib.animation as animation
-    from matplotlib import style
-    import os
-    import sys
-    import timeit
-    import datetime
-
-    import cv2
-    import numpy as np
-    import glob
-
-    #mathematische Vereinfachungen
-    rand = random.uniform
-    root = math.sqrt
-    global e 
-    e = math.e
-    global pi
-    pi = math.pi
-
-    global animals
-    animals = []
-    global plants
-    plants = []
-    global dayCounter
-    dayCounter = 0
-    global speed # in millisekunden die die deltaZeit
-    speed = []
-    global hungerScalar
-    hungerScalar = 199
-    global x_plot #axis of plot
-    x_plot = []
-    global y_plot
-    y_plot = []
-    global z_plot
-    z_plot = []
-
-    global ageCount
-    ageCount = [0] * 2
-    global starveCount
-    starveCount = [0] * 2
-    global eatCount
-    eatCount = 0
-
-    global dsize
-    dsize = (1850, 990)
-
-    if args.show:
-        #pygame.init()
-        win = pygame.display.set_mode(dsize, 0, 32)
-    elif args.pygame_to_file:
-        win = pygame.Surface(dsize)
-
-    global logfile
-    global outputPath 
-    try:
-        os.mkdir(args.outputName)
-        logfile = open(args.outputName + "/log.txt", "w")
-        outputPath = args.outputName
-    except:
-        os.mkdir(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", ""))
-        logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
-        outputPath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
-
-    try:
-        os.mkdir('tmp')
-    except:
-        pass
-
-    def log(string): #logs to console and file
-        print string
-        logfile.write(str(string) + "\n")
-
+try:
     def genplant(): #generates the plant
         x = rand(20, dsize[0] - 20)
         y = rand(20, dsize[1] - 20)
@@ -129,7 +134,7 @@ try:
             else:
                 self.pos = [self.mome.pos[0]+10, self.mome.pos[1]+10]
             self.mutate()
-            self.sens = 300 # TODO austarieren
+            self.sens = args.tarierung_sens # TODO austarieren
             self.hung = 0
             self.dir = [None, None]
             self.sexd = 100
@@ -142,7 +147,7 @@ try:
             # define speed
             val = 150 # ballance value to be adjusted TODO
             if self.dad == None or self.mome == None:
-                mv = 10.0 # adjust TODO
+                mv = args.tarierung_mv # adjust TODO
                 mh = 0.5
                 ms = 2
             else:
@@ -497,6 +502,7 @@ try:
     running = True
 
     #main
+    log('simulation started')
 
     while running:
         starttime = time.time()
@@ -534,7 +540,7 @@ try:
             if args.show:
                 pygame.display.update()
             elif args.pygame_to_file:
-                pygame.image.save(win, "tmp/1" + format(dayCounter, '010d') + ".png")
+                pygame.image.save(win, outputPath + "/tmp/1" + format(dayCounter, '010d') + ".png")
             win.fill((0, 255, 0))
         endtime = time.time()
         foxcounter = 0
@@ -568,6 +574,7 @@ try:
 
 except Exception as e:
     log(e)
+    traceback.print_exc()
     pass
 if not args.skip_plot:
     try:
@@ -619,7 +626,7 @@ if not args.skip_plot:
             ax.set_zlabel('sexdrive')
             ax.scatter(x_plot[i], y_plot[i], z_plot[i])
 
-            fig.savefig(os.getcwd() + '/tmp/'+ format(i, '010d'), dpi=300)
+            fig.savefig(os.getcwd() + '/' + outputPath + '/tmp/'+ format(i, '010d'), dpi=300)
 
             plt.close(fig)
 
@@ -631,7 +638,7 @@ if not args.skip_plot:
         log('creating movie from images')
         size = 0
         img_array = []
-        for filename in glob.glob(os.getcwd() + '/tmp/*.png'):
+        for filename in glob.glob(os.getcwd() + '/' +  outputPath + '/tmp/*.png'):
             trueName = re.split('\\\|/', filename)[-1][0]
             if trueName == '0':
                 img = cv2.imread(filename)
@@ -647,8 +654,7 @@ if not args.skip_plot:
 
         size = 0
         img_array = []
-
-        for filename in glob.glob(os.getcwd() + '/tmp/*.png'):
+        for filename in glob.glob(os.getcwd() + '/' + outputPath + '/tmp/*.png'):
             trueName = re.split('\\\|/', filename)[-1][0]
             if trueName == '1':
                 img = cv2.imread(filename)
@@ -665,13 +671,13 @@ if not args.skip_plot:
         log('cleaning up')
 
         import shutil
-        shutil.rmtree('tmp')
+        shutil.rmtree(outputPath + '/tmp')
         
         infofile = open(outputPath + "/info.txt", "w") # TODO zeitliche aufloesung
         infofile.write('[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
         log('finished')
     except TypeError:
-        log('cleaning up')
-
+        log('cleaning up error')
+        traceback.print_exc()
         import shutil
-        shutil.rmtree('tmp')
+        shutil.rmtree(outputPath + '/tmp')
