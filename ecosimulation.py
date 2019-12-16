@@ -129,7 +129,7 @@ class Animal:
             self.pos = [self.mome.pos[0]+10, self.mome.pos[1]+10]
         self.mutate()
         self.sens = 300 # TODO austarieren
-        self.hung = 50
+        self.hung = 0
         self.dir = [None, None]
         self.sexd = 100
         self.fuckedAlready = 0
@@ -141,46 +141,47 @@ class Animal:
         # define speed
         val = 150 # ballance value to be adjusted TODO
         if self.dad == None or self.mome == None:
-            mv = 5 # adjust TODO
-            mh = 2
-            ms = 2 
+            mv = 10.0 # adjust TODO
+            mh = 0.5
+            ms = 2
         else:
-            mv = (self.dad.v + self.mome.v) / 2
-            mh = (self.dad.hungi + self.mome.hungi) / 2
-            ms = (self.dad.sexdi + self.mome.sexdi) / 2
+            mv = (self.dad.v + self.mome.v) / 2.0
+            mh = (self.dad.hungi + self.mome.hungi) / 2.0
+            ms = (self.dad.sexdi + self.mome.sexdi) / 2.0
 
         #adjust TODO
-        xv = rand(-5, 5)
-        xh = rand(-5, 5)
-        xs = rand(-5, 5)
+        xv = rand(-1, 1)
+        xh = rand(-1, 1)
+        xs = rand(-1, 1)
         #use invers on some of th traits
-        sv = 3 #sigma should be abjusted TODO
-        sh = 3 #sigma should be abjusted TODO
-        ss = 3 #sigma should be abjusted TODO
-        v = abs(1/(sv*root(2*pi))*e**((-1/2)*((xv-mv)/sv)**2))
-        h = abs(1/(sh*root(2*pi))*e**((-1/2)*((xh-mh)/sh)**2))
-        s = abs(1/(ss*root(2*pi))*e**((-1/2)*((xs-ms)/ss)**2))
+        sv = 1.0 #sigma should be abjusted TODO
+        sh = 0.1 #sigma should be abjusted TODO
+        ss = 1.0 #sigma should be abjusted TODO
+        v = abs(mv +(xv*sv))
+        h = abs(mh +(xh*sh))
+        s = abs(ms +(xs*ss))
+
         if v + h + s <= val:
             self.v = v
-            self.hungi = h
+            self.hungi = 1/h
             self.sexdi = s
         else:
             traits = [v, h, s]
             temp = random.randint(0,2)
             alt = val - traits[(temp+1)%3] - traits[(temp+2)%3]
             while alt <= 0:
-                xv = rand(-5, 5)
-                xh = rand(-5, 5)
-                xs = rand(-5, 5)
-                v = abs(1/(sv*root(2*pi))*e**((-1/2)*((xv-m)/sv)**2))
-                h = abs(1/(sh*root(2*pi))*e**((-1/2)*((xh-m)/sh)**2))
-                s = abs(1/(ss*root(2*pi))*e**((-1/2)*((xs-m)/ss)**2))
+                xv = rand(-1, 1)
+                xh = rand(-1, 1)
+                xs = rand(-1, 1)
+                v = abs(mv +(xv*sv))
+                h = abs(mh +(xh*sh))
+                s = abs(ms +(xs*ss))               
                 traits = [v, h, s]
                 temp = random.randint(0,2)
                 alt = val - traits[(temp+1)%3] - traits[(temp+2)%3]
             self.v = v
-            self.hungi = h
-            self.sexdi = s
+            self.hungi = 1/h
+            self.sexdi = s 
             #sum of parameters can't be more than val
 
     def resetFuckery(self):
@@ -301,6 +302,7 @@ class Animal:
         if isinstance(self.target, Rabbit): 
             animals.remove(self.target)
             log("eaten")
+            global eatCount #TODO
             eatCount += 1
             self.hung -= 50 # TODO
 
@@ -357,7 +359,7 @@ class Animal:
         if isinstance(self, Rabbit):
             animals.append(Rabbit(0, self, self.target))# TODO
         else:
-            animals.append(Fox([self.pos[0] + 5, self.pos[1] + 5], 0, self, self.target)) # TODO wieder das mit den Eltern
+            animals.append(Fox(0, self, self.target)) # TODO wieder das mit den Eltern
             
         self.hung += 20 # rest in animal TODO
         self.fuckedAlready = 6 # TODO
@@ -507,7 +509,7 @@ while running:
     for animal in animals:
         if args.show or args.pygame_to_file:
             animal.draw()
-            print animal.v
+            #print animal.v
         animal.age += 1
         animal.hung += animal.hungi
         animal.sexd += animal.sexdi
@@ -645,6 +647,6 @@ while running:
             import shutil
             shutil.rmtree('tmp')
             
-            infofile = open(outputPath + "/info.txt", "w") # TODO zeitliche auflösung
+            infofile = open(outputPath + "/info.txt", "w") # TODO zeitliche aufloesung
             infofile.write('[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
             log('finished')
