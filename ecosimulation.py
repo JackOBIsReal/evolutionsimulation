@@ -568,7 +568,7 @@ try:
             else:
                 log(animal.__class__.__name__)
         dayCounter += 1
-        log(str(endtime - starttime) + " " + str(dayCounter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants)))
+        log(str(endtime - starttime) + " " + str(dayCounter) + " " + str(foxcounter) + " " + str(rabbitcounter) + " " + str(len(plants) + ' neuerTag'))
         
         x_plot.append([])
         y_plot.append([])
