@@ -665,21 +665,22 @@ if not args.skip_plot:
             out.write(img_array[i])
         out.release()      
 
-        size = 0
-        img_array = []
-        for filename in glob.glob(os.getcwd() + '/' + outputPath + '/tmp/*.png'):
-            trueName = re.split('\\\|/', filename)[-1][0]
-            if trueName == '1':
-                img = cv2.imread(filename)
-                height, width, layers = img.shape
-                size = (width,height)
-                img_array.append(img) 
+        if args.pygame_to_file:
+            size = 0
+            img_array = []
+            for filename in glob.glob(os.getcwd() + '/' + outputPath + '/tmp/*.png'):
+                trueName = re.split('\\\|/', filename)[-1][0]
+                if trueName == '1':
+                    img = cv2.imread(filename)
+                    height, width, layers = img.shape
+                    size = (width,height)
+                    img_array.append(img) 
 
-        out = cv2.VideoWriter(outputPath + '/video2.avi', cv2.VideoWriter_fourcc(*'DIVX'), int(args.fps), size)
+            out = cv2.VideoWriter(outputPath + '/video2.avi', cv2.VideoWriter_fourcc(*'DIVX'), int(args.fps), size)
 
-        for i in range(len(img_array)):
-            out.write(img_array[i])
-        out.release()
+            for i in range(len(img_array)):
+                out.write(img_array[i])
+            out.release()
 
         log('cleaning up')
 
@@ -687,7 +688,7 @@ if not args.skip_plot:
         shutil.rmtree(outputPath + '/tmp')
         
         infofile = open(outputPath + "/info.txt", "w") # TODO zeitliche aufloesung
-        infofile.write('[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
+        infofile.write(str(dayCounter) +'\n[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
         log('finished')
     except TypeError:
         log('cleaning up error')
