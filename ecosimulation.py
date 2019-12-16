@@ -267,10 +267,6 @@ class Animal:
                 self.pos[1] -= abs(my)
             self.collision()
 
-    #die when i tell you to
-    def die(self):
-        x = random.uniform(0, 1)
-        val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
         
         if x < val:
             if isinstance(self, Rabbit):
@@ -397,10 +393,10 @@ class Rabbit(Animal):
                 self.targets[0] = None
         
         if self.hung / hungerScalar < 1.6 and self.sexd > 50 and self.fuckedAlready == 0: # TODO lauft immer weg
-            if self.age > 100:
+            if self.age > 50:
                 for animal in animals:
                     if self.distance(animal) <= self.sens and isinstance(animal, Rabbit):
-                        if animal.age > 100 and self.sex != animal.sex:
+                        if animal.age > 50 and self.sex != animal.sex:
                             if self.sex == 1 and self not in animal.ex:
                                 #if all criterial met add to patrners
                                 mate.append(animal) 
@@ -432,6 +428,10 @@ class Rabbit(Animal):
         self.pos[1] += self.dir[1]
         self.collision()
 
+    #die when i tell you to
+    def die(self):
+        x = random.uniform(0, 1)
+        val = 0.0000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
 class Fox(Animal):
     #same for foxes jus other tastes (more deadly)
     def findtarget(self):
@@ -468,6 +468,10 @@ class Fox(Animal):
             self.choosetarget()
             self.movetargeted()
 
+    #die when i tell you to
+    def die(self):
+        x = random.uniform(0, 1)
+        val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
 #you didn't comment either
 #well, you got a point...
 
