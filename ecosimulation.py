@@ -563,12 +563,13 @@ try:
 
         speed.append((endtime - starttime)*1000)
 
-    if dayCounter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
-        running = False
-        raise KeyboardInterrupt
+        if dayCounter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
+            running = False
 
 except KeyboardInterrupt:
-    if not args.skip_plot:
+    pass
+if not args.skip_plot:
+    try:
         log('creating images')
 
         maxx = 0
@@ -668,3 +669,8 @@ except KeyboardInterrupt:
         infofile = open(outputPath + "/info.txt", "w") # TODO zeitliche aufloesung
         infofile.write('[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
         log('finished')
+    except TypeError:
+        log('cleaning up')
+
+        import shutil
+        shutil.rmtree('tmp')
