@@ -13,13 +13,15 @@ parser.add_argument('-dr', dest='count_death_reason', action='store_true', defau
 
 parser.add_argument('-sens', dest='tarierung_sens', default=300)
 parser.add_argument('-mv', dest='tarierung_mv', default=10.0)
+parser.add_argument('-mh', dest='tarierung_mh', default=0.5)
+parser.add_argument('-ms', dest='tarierung_ms', default=2.0)
+
+# const but too laysi toremove
 parser.add_argument('-hungerscalar', dest='tarierung_hungerscalar', default=199)
 parser.add_argument('-essUntergrenze', dest='tarierung_essUntergrenze', default=0.25)
 parser.add_argument('-trs', dest='tarierung_rabbit_esshunger', default=50)
 parser.add_argument('-tfs', dest='tarierung_fox_esshunger', default=50)
-parser.add_argument('-fa', dest='tarierung_fuckedAlready', default=300)
-parser.add_argument('-mv', dest='tarierung_mv', default=10.0)
-
+parser.add_argument('-fa', dest='tarierung_fuckedAlready', default=6)
 
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-fps', dest='fps', action='store', default=15, help='set the fps count of the output videos')
@@ -88,7 +90,7 @@ global eatCount
 eatCount = 0
 
 global dsize
-dsize = (1850, 990)
+dsize = (1024, 576)
 
 if args.show:
     #pygame.init()
@@ -98,15 +100,16 @@ elif args.pygame_to_file:
 
 global logfile
 global outputPath 
-try:
-    os.mkdir(args.outputName)
-    logfile = open(args.outputName + "/log.txt", "w")
-    outputPath = args.outputName
-except:
-    os.mkdir(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", ""))
-    logfile = open(args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")+ "/log.txt", "w")
-    outputPath = args.outputName + datetime.datetime.now().strftime("%H:%M:%S").replace(":", "")
-
+asdf = 0
+while True:
+    asdf += 1
+    try:
+        os.mkdir(args.outputName + str(asdf))
+        logfile = open(args.outputName + str(asdf)+ "/log.txt", "w")
+        outputPath = args.outputName + str(asdf)
+        break
+    except:
+        continue
 try:
     os.mkdir(outputPath + '/tmp')
 except:
@@ -154,8 +157,8 @@ try:
             val = 150 # ballance value to be adjusted TODO
             if self.dad == None or self.mome == None:
                 mv = args.tarierung_mv # adjust TODO
-                mh = 0.5
-                ms = 2
+                mh = args.tarierung_mh
+                ms = args.tarierung_ms
             else:
                 mv = (self.dad.v + self.mome.v) / 2.0
                 mh = (self.dad.hungi + self.mome.hungi) / 2.0
