@@ -563,6 +563,7 @@ try:
     if dayCounter == int(args.dayCount) or rabbitcounter == 0 or foxcounter == 0:
         running = False
         raise KeyboardInterrupt
+    
 except KeyboardInterrupt:
     if not args.skip_plot:
         log('creating images')
