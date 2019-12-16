@@ -268,13 +268,6 @@ class Animal:
             self.collision()
 
         
-        if x < val:
-            if isinstance(self, Rabbit):
-                ageCount[0] += 1
-            else:
-                ageCount[1] += 1
-            log("age" + str(self.__class__.__name__))
-            animals.remove(self) # i used the stones to destroy the stones
 
     #starve as i please
     def starve(self):
@@ -432,6 +425,13 @@ class Rabbit(Animal):
     def die(self):
         x = random.uniform(0, 1)
         val = 0.0000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
+        if x < val:
+            if isinstance(self, Rabbit):
+                ageCount[0] += 1
+            else:
+                ageCount[1] += 1
+            log("age" + str(self.__class__.__name__))
+            animals.remove(self) # i used the stones to destroy the stones
 class Fox(Animal):
     #same for foxes jus other tastes (more deadly)
     def findtarget(self):
@@ -471,7 +471,14 @@ class Fox(Animal):
     #die when i tell you to
     def die(self):
         x = random.uniform(0, 1)
-        val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age 
+        val = 0.00000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)#die of old age
+        if x < val:
+            if isinstance(self, Rabbit):
+                ageCount[0] += 1
+            else:
+                ageCount[1] += 1
+            log("age" + str(self.__class__.__name__))
+            animals.remove(self) # i used the stones to destroy the stones
 #you didn't comment either
 #well, you got a point...
 
