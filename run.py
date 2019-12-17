@@ -34,7 +34,7 @@ def hold():
         except Exception as e:
             if e == IOError:
                 sleep(1)
-                    continue
+                continue
             if e == KeyboardInterrupt:
                 return True
 
