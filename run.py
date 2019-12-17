@@ -50,7 +50,7 @@ try:
     active = True
     while active:
         iteration += 1
-        print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
+        print(population[-1])
         if hold():
             active = False
         dtag = 0
@@ -91,10 +91,14 @@ try:
                 child[i] = parents[random.randrange(0,2)][i]
 
             print 'waiting for simulations to end'
-            print population
             population.append(child)
+
             for i in range(5):
-                startSimulation(mv, mh, ms, sens, iteration, i)
+                startSimulation(child[0], child[1], child[2], child[3], iteration, i)
+        else:
+            for i in range(5):
+                startSimulation(mv * 1.01, mh*1.01, ms*1.01, sens*1.01, iteration, i)
+            population.append()
 except:
     print population
     os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'\n'+str(population)+'" >> long-term-output.txt')
