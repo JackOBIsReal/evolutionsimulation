@@ -97,4 +97,4 @@ try:
                 startSimulation(mv, mh, ms, sens, iteration, i)
 except:
     print population
-    os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'\n'+str(population)'" >> long-term-output.txt')
+    os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'\n'+str(population)+'" >> long-term-output.txt')
