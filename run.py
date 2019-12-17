@@ -34,10 +34,10 @@ while active1:
             f3.close()
             f4.close()
             f5.close()
-            
         except IOError:
             try:
                 sleep(1)
+                continue
             except KeyboardInterrupt:
                 active1 = False
                 active2 = False
