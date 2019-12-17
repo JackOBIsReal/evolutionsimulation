@@ -32,10 +32,10 @@ def hold():
             active = False
             return False
         except Exception as e:
-            if e = IOError:
+            if e == IOError:
                 sleep(1)
-                    continue
-            if e = KeyboardInterrupt:
+                continue
+            if e == KeyboardInterrupt:
                 return True
 
 for i in range(5):
