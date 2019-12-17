@@ -92,7 +92,11 @@ try:
             child = [None] * 4
 
             for i in range(len(child)):
-                child[i] = parents[random.randrange(0,2)][i]
+                if random.random() < 0.9:
+                    child[i] = parents[random.randrange(0,2)][i]
+                else:
+                    child[i] = parents[random.randrange(0,2)][i] * (1 + ((random.random() - 0.5) / 5))
+
 
             print 'waiting for simulations to end'
             population.append(child)
