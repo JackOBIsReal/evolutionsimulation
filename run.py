@@ -99,7 +99,7 @@ try:
         else:
             for i in range(5):
                 startSimulation(mv * 1.01, mh*1.01, ms*1.01, sens*1.01, iteration, i)
-            population.append()
+            population.append([mv * 1.01, mh*1.01, ms*1.01, sens*1.01])
 except:
 
     print population
