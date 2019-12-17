@@ -41,50 +41,49 @@ while active1:
             except KeyboardInterrupt:
                 active1 = False
                 active2 = False
-        else:
-            f1.close()
-            f2.close()
-            f3.close()
-            f4.close()
-            f5.close()
-            
-            dtag = 0
-            drabbit = 0
-            dfox = 0
-            for i in range(1, 6):
-                with open('training' + str(i) + '/info.txt') as f:
-                    tag = 0
-                    rabbit = 0
-                    fox = 0
-                    for line in f:
-                        if 'neuerTag' in line:
-                            line = line.split(' ')
-                            tag = lin[1]
-                            if line[2] > fox:
-                                fox = line[2]
-                            if line[3] > rabbit:
-                                rabbit = line[3]
-                    dtag += float(tag) / float(5)
-                    dfox += float(fox) / float(5)
-                    drabbit += float(rabbit) / float(5)
-            fittness = dtag
-            if drabbit > 2000:
-                fittness -= abs(drabbit - 2000)
-            if dfox > 2000:
-                fittness -= abs(dfox - 2000)
-            
-            abweichung = float(4000 - fittness) / float(10000)
+        f1.close()
+        f2.close()
+        f3.close()
+        f4.close()
+        f5.close()
+        
+        dtag = 0
+        drabbit = 0
+        dfox = 0
+        for i in range(1, 6):
+            with open('training' + str(i) + '/info.txt') as f:
+                tag = 0
+                rabbit = 0
+                fox = 0
+                for line in f:
+                    if 'neuerTag' in line:
+                        line = line.split(' ')
+                        tag = lin[1]
+                        if line[2] > fox:
+                            fox = line[2]
+                        if line[3] > rabbit:
+                            rabbit = line[3]
+                dtag += float(tag) / float(5)
+                dfox += float(fox) / float(5)
+                drabbit += float(rabbit) / float(5)
+        fittness = dtag
+        if drabbit > 2000:
+            fittness -= abs(drabbit - 2000)
+        if dfox > 2000:
+            fittness -= abs(dfox - 2000)
+        
+        abweichung = float(4000 - fittness) / float(10000)
 
-            mv += mv *float((random.random() - 0.5) * 2) * float(abweichung)
-            mh += mh*float((random.random() - 0.5) * 2) * float(abweichung)
-            ms += ms*float((random.random() - 0.5) * 2) * float(abweichung)
+        mv += mv *float((random.random() - 0.5) * 2) * float(abweichung)
+        mh += mh*float((random.random() - 0.5) * 2) * float(abweichung)
+        ms += ms*float((random.random() - 0.5) * 2) * float(abweichung)
 
-            sens += sens*float((random.random() - 0.5) * 2) * float(abweichung)
+        sens += sens*float((random.random() - 0.5) * 2) * float(abweichung)
 
-            for i in range(5):
-                startSimulation(mv, mh, ms, sens, iteration, i)
-            iteration += 1
-            print 'waiting for simulations to end'
-            # Do something with the file
+        for i in range(5):
+            startSimulation(mv, mh, ms, sens, iteration, i)
+        iteration += 1
+        print 'waiting for simulations to end'
+        # Do something with the file
 print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
 os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'" >> long-term-output.txt')
