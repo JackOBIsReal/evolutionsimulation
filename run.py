@@ -43,9 +43,10 @@ for i in range(5):
 # try:
 active1 = True
 while active1:
-    print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
     active2 = True
     while active2:
+        iteration += 1
+        print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
         if hold():
             active1 = False
             active2 = False
@@ -85,7 +86,6 @@ while active1:
 
         for i in range(5):
             startSimulation(mv, mh, ms, sens, iteration, i)
-        iteration += 1
         print 'waiting for simulations to end'
         # Do something with the file
 print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
