@@ -17,8 +17,8 @@ def startSimulation(mv_f, mh_f, ms_f, sens_f, iteration, number):
     os.system('screen -S "{}_{}" -dm python2.7 ecosimulation.py -c 10000 -sp -o training -hl -pc {} -rc {} -fc {} -mv {} -mh {} -ms {} -sens {}'.format(iteration, number, pc, rc, fc, mv_f, mh_f, ms_f, sens_f))
 iteration = 0
 def hold():
-    active = True
-    while active:
+    activeh = True
+    while activeh:
         try:
             f1 = open("training1/info.txt")
             f2 = open("training2/info.txt")
@@ -30,7 +30,7 @@ def hold():
             f3.close()
             f4.close()
             f5.close()
-            active = False
+            activeh = False
             return False
         except Exception as e:
             if e == IOError:
@@ -48,7 +48,7 @@ def sortVal(val):
 try:
     population.sort(key=sortVal)
     active = True
-    while active
+    while active:
         iteration += 1
         print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
         if hold():
