@@ -84,7 +84,7 @@ try:
         population[-1].append(fittness)
         population.sort(key=sortVal)
 
-        logfile.write(population[-1])
+        logfile.write(str(population[-1]))
         print population[-1]
 
         if len(population) >= 2:
