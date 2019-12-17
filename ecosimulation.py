@@ -17,11 +17,11 @@ parser.add_argument('-mh', dest='tarierung_mh', default=0.5)
 parser.add_argument('-ms', dest='tarierung_ms', default=2.0)
 
 # const but too laysi toremove
-parser.add_argument('-hungerscalar', dest='tarierung_hungerscalar', default=199)
-parser.add_argument('-essUntergrenze', dest='tarierung_essUntergrenze', default=0.25)
-parser.add_argument('-trs', dest='tarierung_rabbit_esshunger', default=50)
-parser.add_argument('-tfs', dest='tarierung_fox_esshunger', default=50)
-parser.add_argument('-fa', dest='tarierung_fuckedAlready', default=6)
+parser.add_argument('-hungerscalar', dest='tarierung_hungerscalar', default=199, help='do not use')
+parser.add_argument('-essUntergrenze', dest='tarierung_essUntergrenze', default=0.25, help='do not use')
+parser.add_argument('-trs', dest='tarierung_rabbit_esshunger', default=50, help='do not use')
+parser.add_argument('-tfs', dest='tarierung_fox_esshunger', default=50, help='do not use')
+parser.add_argument('-fa', dest='tarierung_fuckedAlready', default=6, help='do not use')
 
 parser.add_argument('-o', dest='outputName', action='store', default='simulationOutput', help='name of the output files')
 parser.add_argument('-fps', dest='fps', action='store', default=15, help='set the fps count of the output videos')
