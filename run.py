@@ -31,11 +31,11 @@ def hold():
             f5.close()
             active = False
             return False
-        except IOError:
-            try:
+        except Exception as e:
+            if e = IOError:
                 sleep(1)
-                continue
-            except KeyboardInterrupt:
+                    continue
+            if e = KeyboardInterrupt:
                 return True
 
 for i in range(5):
