@@ -95,12 +95,15 @@ try:
                 if parentcount == 0:
                     for i in range(len(population) - 1, -1, -1):
                         if random.random() > 0.9:
-                            print 'lol'
                             paren1 = population[i]
+                            parentcount += 1
+                            break
                 elif parentcount == 1:
                     for i in range(len(population) - 1, -1, -1):
                         if random.random() > 0.9:
                             paren2 = population[i]
+                            parentcount += 1
+                            break
             parents = [parent1,parent2]
             child = [None] * 4
 
