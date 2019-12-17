@@ -39,18 +39,20 @@ def hold():
             if e == KeyboardInterrupt:
                 return True
 
+population = []
 for i in range(5):
     startSimulation(mv, mh, ms, sens, iteration, i)
-# try:
-active1 = True
-while active1:
-    active2 = True
-    while active2:
+population.append([mv, mh, ms, sens])
+def sortVal(val): 
+    return val[-1]
+try:
+    population.sort(key=sortVal)
+    active = True
+    while active
         iteration += 1
         print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
         if hold():
-            active1 = False
-            active2 = False
+            active = False
         dtag = 0
         drabbit = 0
         dfox = 0
@@ -61,7 +63,6 @@ while active1:
                 fox = 0
                 for line in f:
                     if 'neuerTag' in line:
-                        print line
                         line = line.split(' ')
                         tag = line[1]
                         if line[2] > fox:
@@ -78,18 +79,22 @@ while active1:
             fittness -= abs(drabbit - 2000)
         if dfox > 2000:
             fittness -= abs(dfox - 2000)
-        
-        abweichung = (10- (10-10*math.e**(-(0.0002917757*fittness))))/(100)
 
-        mv += mv *float((random.random() - 0.5) * 2) * float(abweichung)
-        mh += mh*float((random.random() - 0.5) * 2) * float(abweichung)
-        ms += ms*float((random.random() - 0.5) * 2) * float(abweichung)
+        population[-1].append(fittness)
+        population.sort(key=sortVal)
 
-        sens += sens*float((random.random() - 0.5) * 2) * float(abweichung)
+        if len(population) >= 2:
+            parents = [population[-1],population[-2]]
+            child = [None] * 4
 
-        print 'waiting for simulations to end'
-        for i in range(5):
-            startSimulation(mv, mh, ms, sens, iteration, i)
-        # Do something with the file
-print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
-os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'" >> long-term-output.txt')
+            for i in range(len(child)):
+                child[i] = parents[random.randrange(0,2)][i]
+
+            print 'waiting for simulations to end'
+            print population
+            population.append(child)
+            for i in range(5):
+                startSimulation(mv, mh, ms, sens, iteration, i)
+except:
+    print population
+    os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'\n'+str(population)'" >> long-term-output.txt')
