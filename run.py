@@ -88,11 +88,23 @@ try:
         logfile.write(str(population[-1]))
 
         if len(population) >= 2:
-            parents = [population[-1],population[-2]]
+            parentcount = 0
+            parent1 = 0
+            parent2 = 0
+            while parentcount != 2:
+                if parentcount == 0:
+                    for i in range(len(population) - 1, -1, -1):
+                        if random.random() > 0.9:
+                            paren1 = population[i]
+                elif parentcount == 1:
+                    for i in range(len(population) - 1, -1, -1):
+                        if random.random() > 0.9:
+                            paren2 = population[i]
+            parents = [parent1,parent2]
             child = [None] * 4
 
             for i in range(len(child)):
-                if random.random() < 0.9:
+                if random.random() < 0.8:
                     child[i] = parents[random.randrange(0,2)][i]
                 else:
                     child[i] = parents[random.randrange(0,2)][i] * (1 + ((random.random() - 0.5) / 5))
