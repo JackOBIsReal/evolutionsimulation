@@ -1,4 +1,5 @@
 \documentclass[12pt]{article}
+\usepackage{amsfonts} 
 \usepackage[margin=0.8in]{geometry}
 \usepackage[utf8]{inputenc}
 \addtolength{\topmargin}{-.175in}
@@ -17,14 +18,20 @@ Die Simulation basiert auf Objektorientierter Programmierung und simuliert die W
 \newpage
 \section{Die Simulation}
 \subsection{Algemeines zu Objektorientierter Programmierung und numerischen Simulationen}
-Objektorientierte Programmierung bezeichnet das Programieren mit so genannten Klassen und Objekten.
+Objektorientierte Programmierung bezeichnet das Programieren mit Hilfe so genannter Klassen und Objekte.
 Ein Objekt oder eine Instanz einer Klasse ist beispielsweise ein Individuum des Typs Kaninchen.
 In dem Beispielwaere die Klasse die kaninchen im allgemeinen.
 Eine Klasse kann man sich vorstellen wie Methodenkarten in denen eine Reiken von Informationen gespeichert sind.
 Diese koennen Instanzvariablen oder Methoden sein.
-
 Instanzvariablen sind Variablen die jede Instanz traegt.
 Methoden sind Funktionen oder Anweisungen die jede Instanz der Klasse ausfuehren kann.
+
+Bei numerischen Simulationen wird ein Szenario aus der Reellen Welt durch eine Computer simulation nachgestellt,
+Dabei wird das System zum Zeitpunkt t betrachtet.
+Aufgrundlage dessen wird wird der Zustand des Systems zum Zeitpunkt t + h berchnet.
+dabei gilt je kleiner h desto genauer ist die simulation,
+Alle aenderungen werden angewand und der Prozess wird wiederholt bis der gesamte Zeitraum Simuliert wurde den es zu betrachten gilt.
+Dies ist nuetzlich um die Gultigkeit von Modellen zu pruefen oder z.b. die Stabilitaet des betrachteten Systems zu testen.
 \subsection{Knzept der Simulation}
 In der Simulation werden Pflanzen Kaninchen und Fuechse simuliert.
 Jedes Tier ist entweder eine Instanz der Klasse Fox oder Rabbit, die jeweils Unterklassen der Klasse Animal sind.
@@ -60,15 +67,38 @@ Jedes Tier hat zwei Arten wie es sich fortbewegn kann.
 Wenn es ein bestimmtes Ziel hat, wird movetargeted aufgerufen, und das Tier Bewegt sich entlang des Vektors von der eigenen Position zum Ziel.
 Dabei ist der Bewegungsvektor auf die Bewegungsgeschwindigkeit normiert.
 Wenn kein Ziel in Sicht ist, wird moverandom aufgerufen, und sie bewegen sich zufällig.
+Dabei wird die Methode Collision jedes mal aufgerufen.
+Diese verhindert das Tiere aus der Katre rauslaufen.
 \subsubsection{Fortpflanzung und Mutation}
 Haben sich zwei gefunden wird der Liste der Tiere eine neue Instanz der Klasse hinzugefügt.
 Bei den mutierbaren Eigenschaften wird der Durchschnitt aus den jeweiligen Werten der Eltern als Mittelwert angenommen.
 Der Wert des Kindes weicht weicht um x von diesen Durchschnitt ab, wobei x eine zufallige Zahl zwischen u und v ist
 
 Die eltern speichern sich gegenseitig als ehemalige Parnter ab und betrachten sich anschließen für eine Festgelegte Frist nicht mehr als mögliche Patrner. Ausserdem koennen sich die Eltern prinzipiell fuer eine Festgelegte Fist nicht weiter fortpflanzen.
+\subsubsection{Tod}
+Tiere koennen auf drei untertschiedlichen Arten sterben.
+Sie koennen verhungern, sie koennen durch die Altersabhaegige Funktion sterben oder kaninchen koennen verhungern.
+Dies wird durch die Methoden starve, die unf eat geregelt.
+Die Methoden stave und die werden bei jeder Iteration afgerufen, und eat wenn ein Kaninchen gefressen wird.
+%starve
 
+Die Todeswahrscheinlichkeitsdichte wird durch eine Funktion beschrieben nach dem Muster:
+\begin{equation}
+    a ( {e}^{-t + b} \cdot c \cdot t + d)
+    %val = 0.0000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)
+\end{equation}
+t entspricht dem Alter fuer $t \in \mathbb{R}_{>0}$  und a bis d sind Konstanten.
+Durch so eine Funktion ich P fuer ein kleines t relativ gross.
+P erreicht im positiven bereich ein Minimum und wachst dan aproximativ linear an.
+Dies fast Kindersterblichkeit und alterschwaeche in ein Funktion zusammen.
+
+Beim sterben durch gegessen werden loescht der fuchs die gegessene isntanz aus der Liste der Tiere.
+\subsubsection{Andere Methoden}
+Hinzu kommen noch weiter Hifsmethoden wie z.b. distance die den Abstand zwisch self und eine Beliebigen Punkt berechnet.
+Diese sind jedoch fuer das allgemeine verstaendniss unsere Abreit nicht essentiell.
 \subsection{Frontend (Jacob)}
 %hier schreibst du wie du das gemacht hast
+%flags und pygame
 \subsection{Tarieren der Werte}
 %hier schreibst du wie du das gemacht hast
 \section{Die Analyse}
