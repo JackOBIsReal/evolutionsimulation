@@ -692,11 +692,12 @@ if not args.skip_plot:
         import shutil
         shutil.rmtree(outputPath + '/tmp')
         
-        infofile = open(outputPath + "/info.txt", "w") # TODO zeitliche aufloesung
-        infofile.write(str(dayCounter) +'\n[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
         log('finished')
     except TypeError:
         log('cleaning up error')
         traceback.print_exc()
         import shutil
         shutil.rmtree(outputPath + '/tmp')
+
+infofile = open(outputPath + "/info.txt", "w") # TODO zeitliche aufloesung
+infofile.write(str(dayCounter) +'\n[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
