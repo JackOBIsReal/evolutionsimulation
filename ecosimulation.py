@@ -391,6 +391,7 @@ try:
             self.target = None
             food = []
             mate = []
+            run = []
 
             self.targets = [None]*2
             direction = True
@@ -415,24 +416,27 @@ try:
                                     #if all criterial met add to patrners
                                     mate.append(animal) 
                 if self.distance(animal) <= self.sens and isinstance(animal, Fox):
-                    #finclosest fox
-                    self.target = animal
-                    self.movetargeted()
-                    self.run()
-                            
-            if len(mate) != 0: # TODO
-                #find closest partner
-                self.targets[1] = self.findclosest(mate)
-                direction = False
-            else:
-                self.targets[1] = None
-
-            if direction:
-                #if nothing in reach
-                self.moverandom()
-            else:
-                self.choosetarget()
+                    
+                    run.append(animal)
+                    
+            if len(run) == 0:
+                self.target = self.findclosest(run)
                 self.movetargeted()
+                self.run()
+            else:
+                if len(mate) != 0: # TODO
+                    #find closest partner
+                    self.targets[1] = self.findclosest(mate)
+                    direction = False
+                else:
+                    self.targets[1] = None
+
+                if direction:
+                    #if nothing in reach
+                    self.moverandom()
+                else:
+                    self.choosetarget()
+                    self.movetargeted()
                 
         def run(self): # RUN! da dadadadadadadadadadadadad daaa dadadadadaddaadadada
             self.movetargeted() 
