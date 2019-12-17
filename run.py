@@ -15,14 +15,9 @@ sens = 300
 def startSimulation(mv_f, mh_f, ms_f, sens_f, iteration, number):
     os.system('screen -S "{}_{}" -dm python2.7 ecosimulation.py -c 10000 -sp -o training -hl -pc {} -rc {} -fc {} -mv {} -mh {} -ms {} -sens {}'.format(iteration, number, pc, rc, fc, mv_f, mh_f, ms_f, sens_f))
 iteration = 0
-for i in range(5):
-    startSimulation(mv, mh, ms, sens, iteration, i)
-# try:
-active1 = True
-while active1:
-    print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
-    active2 = True
-    while active2:
+def hold():
+    active = True
+    while active:
         try:
             f1 = open("training1/info.txt")
             f2 = open("training2/info.txt")
@@ -34,19 +29,26 @@ while active1:
             f3.close()
             f4.close()
             f5.close()
+            active = False
+            return False
         except IOError:
             try:
                 sleep(1)
                 continue
             except KeyboardInterrupt:
-                active1 = False
-                active2 = False
-        f1.close()
-        f2.close()
-        f3.close()
-        f4.close()
-        f5.close()
-        
+                return True
+
+for i in range(5):
+    startSimulation(mv, mh, ms, sens, iteration, i)
+# try:
+active1 = True
+while active1:
+    print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
+    active2 = True
+    while active2:
+        if hold():
+            active1 = False
+            active2 = False
         dtag = 0
         drabbit = 0
         dfox = 0
