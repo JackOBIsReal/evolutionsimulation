@@ -70,6 +70,7 @@ while active1:
                 dfox += float(fox) / float(5)
                 drabbit += float(rabbit) / float(5)
         os.system('rm -r training*/')
+        print('tage {}, fuechse {}, hasen{}'.format(dtag, dfox, drabbit))
         fittness = dtag
         if drabbit > 2000:
             fittness -= abs(drabbit - 2000)
@@ -84,9 +85,9 @@ while active1:
 
         sens += sens*float((random.random() - 0.5) * 2) * float(abweichung)
 
+        print 'waiting for simulations to end'
         for i in range(5):
             startSimulation(mv, mh, ms, sens, iteration, i)
-        print 'waiting for simulations to end'
         # Do something with the file
 print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
 os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'" >> long-term-output.txt')
