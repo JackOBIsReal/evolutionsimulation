@@ -68,6 +68,7 @@ while active1:
                 dtag += float(tag) / float(5)
                 dfox += float(fox) / float(5)
                 drabbit += float(rabbit) / float(5)
+        os.system('rm -r training*/')
         fittness = dtag
         if drabbit > 2000:
             fittness -= abs(drabbit - 2000)
