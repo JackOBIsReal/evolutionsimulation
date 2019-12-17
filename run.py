@@ -71,21 +71,21 @@ try:
                             fox = line[2]
                         if line[3] > rabbit:
                             rabbit = line[3]
-                dtag += float(tag) / float(5)
-                dfox += float(fox) / float(5)
-                drabbit += float(rabbit) / float(5)
+                dtag += tag
+                dfox += fox
+                drabbit += rabbit
         os.system('rm -r training*/')
         fittness = dtag
-        if drabbit > 2000:
-            fittness -= abs(drabbit - 2000)
-        if dfox > 2000:
-            fittness -= abs(dfox - 2000)
+        if drabbit > 2000*5:
+            fittness -= abs(drabbit/5 - 2000)
+        if dfox > 2000*5:
+            fittness -= abs(dfox/5 - 2000)
 
         population[-1].append(fittness)
+        print 'last one: {}'.format(population[-1])
         population.sort(key=sortVal)
 
         logfile.write(str(population[-1]))
-        print population[-1]
 
         if len(population) >= 2:
             parents = [population[-1],population[-2]]
