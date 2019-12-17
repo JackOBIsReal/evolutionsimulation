@@ -60,9 +60,10 @@ while active1:
                 rabbit = 0
                 fox = 0
                 for line in f:
+                    print line
                     if 'neuerTag' in line:
                         line = line.split(' ')
-                        tag = lin[1]
+                        tag = line[1]
                         if line[2] > fox:
                             fox = line[2]
                         if line[3] > rabbit:
@@ -71,7 +72,7 @@ while active1:
                 dfox += float(fox) / float(5)
                 drabbit += float(rabbit) / float(5)
         os.system('rm -r training*/')
-        print('tage {}, fuechse {}, hasen{}'.format(dtag, dfox, drabbit))
+        print('tage {}, fuechse {}, hasen {}'.format(dtag, dfox, drabbit))
         fittness = dtag
         if drabbit > 2000:
             fittness -= abs(drabbit - 2000)
