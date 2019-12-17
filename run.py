@@ -76,7 +76,7 @@ while active1:
         if dfox > 2000:
             fittness -= abs(dfox - 2000)
         
-        abweichung = float(4000 - fittness) / float(10000)
+        abweichung = (10- (10-b*e**(-(c*fittness))))/(100)
 
         mv += mv *float((random.random() - 0.5) * 2) * float(abweichung)
         mh += mh*float((random.random() - 0.5) * 2) * float(abweichung)
