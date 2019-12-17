@@ -34,6 +34,20 @@ while active1:
             f3.close()
             f4.close()
             f5.close()
+            
+        except IOError:
+            try:
+                sleep(1)
+            except KeyboardInterrupt:
+                active1 = False
+                active2 = False
+        else:
+            f1.close()
+            f2.close()
+            f3.close()
+            f4.close()
+            f5.close()
+            
             dtag = 0
             drabbit = 0
             dfox = 0
@@ -72,17 +86,5 @@ while active1:
             iteration += 1
             print 'waiting for simulations to end'
             # Do something with the file
-        except IOError:
-            try:
-                sleep(1)
-            except KeyboardInterrupt:
-                active1 = False
-                active2 = False
-        else:
-            f1.close()
-            f2.close()
-            f3.close()
-            f4.close()
-            f5.close()
 print str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)
 os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'" >> long-term-output.txt')
