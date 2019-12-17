@@ -55,13 +55,13 @@ while active1:
         drabbit = 0
         dfox = 0
         for i in range(1, 6):
-            with open('training' + str(i) + '/info.txt') as f:
+            with open('training' + str(i) + '/log.txt') as f:
                 tag = 0
                 rabbit = 0
                 fox = 0
                 for line in f:
-                    print line
                     if 'neuerTag' in line:
+                        print line
                         line = line.split(' ')
                         tag = line[1]
                         if line[2] > fox:
