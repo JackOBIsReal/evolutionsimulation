@@ -2,6 +2,7 @@ import os
 from time import sleep
 import random
 import math
+import traceback
 
 pc = 500
 rc = 500
@@ -100,5 +101,8 @@ try:
                 startSimulation(mv * 1.01, mh*1.01, ms*1.01, sens*1.01, iteration, i)
             population.append()
 except:
+
     print population
     os.system('echo "' + str(pc) + ' '+str(rc)+' '+str(fc)+' '+str(mv)+' '+str(mh)+' '+str(ms)+' '+str(sens)+'\n'+str(population)+'" >> long-term-output.txt')
+
+    traceback.print_exc()
