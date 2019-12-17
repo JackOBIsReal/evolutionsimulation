@@ -70,9 +70,9 @@ while active1:
             for i in range(5):
                 startSimulation(mv, mh, ms, sens, iteration, i)
             iteration += 1
+            print 'waiting for simulations to end'
             # Do something with the file
         except IOError:
-            print("File not accessible")
             try:
                 sleep(1)
             except KeyboardInterrupt:
