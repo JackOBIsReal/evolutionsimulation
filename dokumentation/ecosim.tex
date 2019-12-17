@@ -16,50 +16,58 @@ Die Simulation basiert auf Objektorientierter Programmierung und simuliert die W
 \tableofcontents
 \newpage
 \section{Die Simulation}
-\subsection{Verhalten}
+\subsection{Algemeines zu Objektorientierter Programmierung und numerischen Simulationen}
+Objektorientierte Programmierung bezeichnet das Programieren mit so genannten Klassen und Objekten.
+Ein Objekt oder eine Instanz einer Klasse ist beispielsweise ein Individuum des Typs Kaninchen.
+In dem Beispielwaere die Klasse die kaninchen im allgemeinen.
+Eine Klasse kann man sich vorstellen wie Methodenkarten in denen eine Reiken von Informationen gespeichert sind.
+Diese koennen Instanzvariablen oder Methoden sein.
+
+Instanzvariablen sind Variablen die jede Instanz traegt.
+Methoden sind Funktionen oder Anweisungen die jede Instanz der Klasse ausfuehren kann.
+\subsection{Knzept der Simulation}
+In der Simulation werden Pflanzen Kaninchen und Fuechse simuliert.
+Jedes Tier ist entweder eine Instanz der Klasse Fox oder Rabbit, die jeweils Unterklassen der Klasse Animal sind.
+In Animal sind alle Methoden gespeichert, die fuer Kaninchen und Fuechse identisch ausgefuehrt werden, wie der Konstruktor init oder movetargeted zu gezielten bewegen.
+Methoden die fuer Fuechse und kaninchen unterschiedlcih sind, sind in den Jeweiligen unterklassen gespeichert.
+Diese sind z.b. findtarget zum finden aller potentiellen Ziele.
+Auf die unterschiedlcihen Instanzvariablen und Methoden wird aber in Kapitel \ref{methoden} weiter eingegangen.
 Alle Tiere haben eine kreisförmiges Sichtfeld, was nicht die komplette Karte abdeckt.
 Sie haben alle ein, mit der Zeit zunehmendes, Bedürfnis sich fortzupflanzen und zu essen.
-Das Bedürfnis wird bei der Erfüllung verringert.
-Kaninchen essen pflanzen und Füchse essen Kaninchen.
-Kaninchen fliehen vor Füchsen.
-Jedes Individuum ist eine Instanz einer Klasse, und hat individuelle
-Eigenschaften die als Instanzvariablen bezeichnet werden.
-Dies sind Dinge wie Position, Hungerstatus, Geschlecht usw.
+Alle Bedürfnis werden bei deren Erfüllung verringert.
+Wird der Hunger zu stark kann das Tier verhungern und sterben.
+Ausserdem kann ein Tier zu jedem mit einer Wahrscheinlichkeit sterben die vom alter abhaengig ist.
+Kaninchen essen pflanzen und Füchse essen Kaninchen, wobei gegessen Kaninche sterben.
+Kaninchen koennen vor Fuechsen fluechten die sich innerhalb des Sichtfelds befinden.
 
-\subsection{Konzept der Simulation}
-Die Simulation basiert auf Objektorientierter Programmierung.
-Es gibt eine Klasse fuer Tiere und je eine Unterklasse für Füchse und für kaninchen.
-Klassen in der Informatik kann man sich vorstellen wie eine Methodenkarte mit derer man beispielsweise ein Kanienchen machen kann.
-Darin gespeichert sind Variablen wie Position oder geschlecht, und Methoden.
-Dies sind funktionen oder Aktionen die das Kaninchen ausführen kann.
-Dies kann z.b. essen, oder Fortpflanzen sein.
-
-Jedes Tier hat Instanzvarieblen die Position, Geschlchtecht, Alter, Hunger, Eltern, Bewegungsgeschwindigkeit, Sichtradius, Reprudktionsdrang und gespeicherte expartner Feslegen.
 \subsection{Methoden}
-\subsubsection{Bewgung}
-Jedes Tier hat zwei Arten wie es sich fortbewegn kann.
-Wenn ein bestimmtes Ziel hat Bweget es sich entlang des Vektors von der eigenen Position zum Ziel.
-Dabei ist der Bewegungsvektor auf die BewegungsGeschwindigkeit normiert.
-Kaninchen können außerdem fliehen.
-hierzu wird aber nur die Methoden zum Gezielten bewegen aufgerufen und der Vektor mit -1 mutlipliziert.
-Außerdem können sie sich, wenn sie kein Ziel in sichtweite haben zufälligbewgen.
-
+\label{methoden}
 \subsubsection{Aussuchen eines Ziels}
-Jedes Tier speichert alle Objekte die sich innerhalb des Sichradius befinden.
+Dies wird durch die Methode findtarget geregelt, die aus der Hauptschleife aufgerufen wird.
+findtarget ist sowohl eine Methode der Klasse Fox als auch der Klasse Rabbit.
+Dort sind sie aber unterschiedlich definiert dar fuechse sich anders verhalten sollen als Kaninchen.
+Jedes Tier speichert alle Objekte die sich innerhalb des Sichtradius self.sens befinden in einer Liste ab.
+
+Anschliessend wird geprueft welches Ziel angesteuert werden soll.
+Dazu wird aus jeder Liste das naechste Element gesucht.
 Wenn ein Kaninchen ein Fuchs sieht hat die Flucht immer oberste Priorität.
-Es wir der sich am nächsten befindliche Fuchs heraus gesucht und die entgegen gesetzte Richtung als ziel festgelegt.
+Der Fuchs wir anwisiert un der Bewgungsveklor wird mit -1 multipliziert
+danach wird gepueft ob Hunger oder Libodo staerker wirkt und demnach wir entschieden ob das naechste essen oder naechste partner anwisiert wird.
 
-Anschleißend wir abgewogen.
-Wenn der Wert für den Hunger Größer ist als der Wert fürLibido, wird das nächste essen anwisiert.
-Ist der Hungerwert größer wird der nächste Sexualpartner anvisiert.
+\subsubsection{Bewegung}
+Die Bewegung der Tiere wird durch die Methoden movetargeted und moverandom definiert.
+Jedes Tier hat zwei Arten wie es sich fortbewegn kann.
+Wenn es ein bestimmtes Ziel hat, wird movetargeted aufgerufen, und das Tier Bewegt sich entlang des Vektors von der eigenen Position zum Ziel.
+Dabei ist der Bewegungsvektor auf die Bewegungsgeschwindigkeit normiert.
+Wenn kein Ziel in Sicht ist, wird moverandom aufgerufen, und sie bewegen sich zufällig.
 \subsubsection{Fortpflanzung und Mutation}
-Haben sich zwei gefunden wird der Liste der Tiere eine Neue Instanz Derklasse hinzugefügt.
-Bei der Mutierbaren Eingenschaften wird der Durschnit aus den jeweigen werten der Eltern als Mittelwert angenommen.
-Die Wert des Kindes weichen normal verteilt von den Durchschnitt ab.
+Haben sich zwei gefunden wird der Liste der Tiere eine neue Instanz der Klasse hinzugefügt.
+Bei den mutierbaren Eigenschaften wird der Durchschnitt aus den jeweiligen Werten der Eltern als Mittelwert angenommen.
+Der Wert des Kindes weicht weicht um x von diesen Durchschnitt ab, wobei x eine zufallige Zahl zwischen u und v ist
 
-Die eltern spern sich gegenseitig als ehemalige Parnter ab und betrachten sich anschließen für eine Festgelegte Frist nicht mehr als mögliche patrner.
+Die eltern speichern sich gegenseitig als ehemalige Parnter ab und betrachten sich anschließen für eine Festgelegte Frist nicht mehr als mögliche Patrner. Ausserdem koennen sich die Eltern prinzipiell fuer eine Festgelegte Fist nicht weiter fortpflanzen.
 
-\subsection{Frontend (Jakob)}
+\subsection{Frontend (Jacob)}
 %hier schreibst du wie du das gemacht hast
 \subsection{Tarieren der Werte}
 %hier schreibst du wie du das gemacht hast
@@ -68,15 +76,18 @@ Die eltern spern sich gegenseitig als ehemalige Parnter ab und betrachten sich a
 Eine Moeglichkeit das Programm zu verbessern waere ein sogenanntes Gridsystem zu implementieren.
 Dabei wird das Feld in mehrere Subfelder unterteilt.
 Die Objekte werden in einer Matrix gespeichert wobei jeder Index der Matrix eine Subfeld zugeordnet ist.
-Das bietet den Vorteil, dass die Tiere bei Jeder Iteration nicht mehr die Die position aller Objekte lesen muessen, sondern nur die der Objekte die sich im selben bzw in einem der acht umliegenden.
+Das bietet den Vorteil, dass die Tiere bei Jeder Iteration nicht mehr die Die position aller Objekte abfragen muessen, sondern nur die der Objekte die sich im selben bzw. in einem der Felder befinden die mit dem Schtkreis ueberlappen.
 Somit kann die laufzeit pro Iteration stark reduziert werden.
 
-Asserdem kann eine andere, schnellere Programmiersprachhe verwendet werden.
-Fure richtige wissenschaftliche anwendungen kann eine erweiterte Version eines solchen Programm auf staerkeren Computern ausgefuehrt werden.
-\section{Anwendunge}
+Asserdem kann eine andere, schnellere Programmiersprache verwendet werden.
+Fuer Unfangreiche wissenschaftliche Anwendungen kann eine erweiterte Version eines solchen Programm auf staerkeren Computern ausgefuehrt werden.
+\section{Anwendungen}
 Eine Umfanreichere Simulation dieser Art koennte nuetzlichsein um die Auswirkungen von Menschlichem Eingriff in oekosysteme wie Klimaerwaermung, Lebensraum veraendungen oder austerben einer Art abzuschaetzen.
 Dies koennte nuetzlich sein um notwendigkeit und Dringlichkeit von Umwelt Massnahmem abzuschaetzen.
 \section{Fazit}
 Wir haben mit Hilfe objektientierter Programmierung eine Vereinfachte Simulation eines OEkosysteme entwickelt im dem wir uns auf die Wechselwirkung zwischen zwei Tierarten konzentriert haben.
-
+Dabei sind wir auf unterschiedliche Schwierigkeiten gestossen.
+zuerst mussten wir entscheiden wie genau unsere Simulation sein soll.
+Anschliesend war es sehr schwierig all Willkuerrlch gewaehlten Parameter so zu beziffern, dass keine der Arten zu schnell ausstrirbt.
+Dabei haben wir festgestellt wie fragil auch so ein einfaches OEkosystem sein kann.
 \end{document}
