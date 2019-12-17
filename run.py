@@ -14,6 +14,8 @@ ms = 2.0
 
 sens = 300
 
+logfile = open('log.txt', 'w')
+
 def startSimulation(mv_f, mh_f, ms_f, sens_f, iteration, number):
     os.system('screen -S "{}_{}" -dm python2.7 ecosimulation.py -c 10000 -sp -o training -hl -pc {} -rc {} -fc {} -mv {} -mh {} -ms {} -sens {}'.format(iteration, number, pc, rc, fc, mv_f, mh_f, ms_f, sens_f))
 iteration = 0
@@ -51,7 +53,6 @@ try:
     active = True
     while active:
         iteration += 1
-        print(population[-1])
         if hold():
             active = False
         dtag = 0
@@ -74,7 +75,6 @@ try:
                 dfox += float(fox) / float(5)
                 drabbit += float(rabbit) / float(5)
         os.system('rm -r training*/')
-        print('tage {}, fuechse {}, hasen {}'.format(dtag, dfox, drabbit))
         fittness = dtag
         if drabbit > 2000:
             fittness -= abs(drabbit - 2000)
@@ -83,6 +83,9 @@ try:
 
         population[-1].append(fittness)
         population.sort(key=sortVal)
+
+        logfile.write(population[-1])
+        print population[-1]
 
         if len(population) >= 2:
             parents = [population[-1],population[-2]]
