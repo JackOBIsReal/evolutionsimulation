@@ -66,11 +66,11 @@ try:
                 for line in f:
                     if 'neuerTag' in line:
                         line = line.split(' ')
-                        tag = line[1]
-                        if line[2] > fox:
-                            fox = line[2]
-                        if line[3] > rabbit:
-                            rabbit = line[3]
+                        tag = int(line[1])
+                        if int(line[2]) > fox:
+                            fox = int(line[2])
+                        if int(line[3]) > rabbit:
+                            rabbit = int(line[3])
                 dtag += tag
                 dfox += fox
                 drabbit += rabbit
