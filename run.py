@@ -105,7 +105,6 @@ try:
                             parentcount += 1
                             break
             parents = [parent1,parent2]
-            print parents
             child = [None] * 4
 
             for i in range(len(child)):
