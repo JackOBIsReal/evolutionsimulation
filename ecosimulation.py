@@ -1,3 +1,4 @@
+#begin Jacob=====================================================
 import argparse
 import traceback
 
@@ -123,7 +124,8 @@ except:
 def log(string): #logs to console and file
     print string
     logfile.write(str(string) + "\n")
-
+    #end Jacob =========================================================
+#begin Jonas============================================================
 try:
     def genplant(): #generates the plant
         x = rand(20, dsize[0] - 20)
@@ -208,11 +210,13 @@ try:
             self.v = v
             self.hungi = 1/h
             self.sexdi = s
-
+#end Jonas==============================================================
+#begin Jacob============================================================
         def resetFuckery(self):
             if self.fuckedAlready > 0:
                 self.fuckedAlready -= 1
-
+#end Jacob=============================================================
+#begin Jonas===========================================================
         def draw(self):
             if isinstance(self, Rabbit):
                 if self.sex == 0:
@@ -292,9 +296,8 @@ try:
                 if dy < 0:
                     self.pos[1] -= abs(my)
                 self.collision()
-
-            
-
+#end Jonas==============================================================
+#begin Jacob===========================================================
         #starve as i please
         def starve(self):
             x = random.uniform(0, 2)
@@ -306,6 +309,7 @@ try:
                     starveCount[1] += 1
                 log("starve" + str(self.__class__.__name__))
                 animals.remove(self) # i used the stones to destroy the stones
+#end Jacob===============================================================#begin Jonas============================================================
 
         #eat palnst or rabbits
         def eat(self):
@@ -517,6 +521,8 @@ try:
     #well, you got a point...
 
     #vorbereitung echte Simulation
+    #edn Jonas=======================================================
+    #begin jacob======================================================
     for i in range(int(args.plantCount)):
         genplant()
     for i in range(int(args.rabbitCount)):
@@ -524,12 +530,11 @@ try:
     for i in range(int(args.foxCount)):
         animals.append(Fox(rand(0, 100), None, None))
 
-
-    running = True
-
     #main
     log('simulation started')
-
+    #end Jacob ==========================================================
+    #begin jonas========================================================
+    running = True
     while running:
         starttime = time.time()
         if args.show:
@@ -561,6 +566,8 @@ try:
             animal.age += 1
             animal.hung += animal.hungi
             animal.sexd += animal.sexdi
+            #end Jonas=================================================
+            #begin Jacob===============================================
         #draw
         if args.show or args.pygame_to_file: # TODO
             drawplants()
@@ -710,3 +717,4 @@ if not args.skip_plot:
 
 infofile = open(outputPath + "/info.txt", "w") # TODO zeitliche aufloesung
 infofile.write(str(dayCounter) +'\n[rabbit, fox]\nstarved: '+str(starveCount)+'\nage: ' + str(ageCount)+'\nrabbits eaten: ' +str(eatCount))
+#end Jacob===========================================================
