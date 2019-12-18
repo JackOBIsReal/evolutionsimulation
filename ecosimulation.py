@@ -159,50 +159,55 @@ try:
 
         def mutate(self):
             # define speed
-            val = 150 # ballance value to be adjusted TODO
+            valmax = 150 # ballance value to be adjusted TODO
+            valmin = 10
             if self.dad == None or self.mome == None:
                 mv = args.tarierung_mv # adjust TODO
                 mh = args.tarierung_mh
                 ms = args.tarierung_ms
+                
             else:
                 mv = (self.dad.v + self.mome.v) / 2.0
                 mh = (self.dad.hungi + self.mome.hungi) / 2.0
                 ms = (self.dad.sexdi + self.mome.sexdi) / 2.0
-
+               
+#            v, h, s = 938293892, 903280283, 2389238932
+            
+            sv = 1.0 #sigma should be abjusted TODO
+            sh = 0.1 #sigma should be abjusted TODO
+            ss = 1.0 #sigma should be abjusted TODO
             #adjust TODO
             xv = rand(-1, 1)
             xh = rand(-1, 1)
             xs = rand(-1, 1)
             #use invers on some of th traits
-            sv = 1.0 #sigma should be abjusted TODO
-            sh = 0.1 #sigma should be abjusted TODO
-            ss = 1.0 #sigma should be abjusted TODO
             v = abs(mv +(xv*sv))
             h = abs(mh +(xh*sh))
             s = abs(ms +(xs*ss))
-
-            if v + h + s <= val:
-                self.v = v
-                self.hungi = 1/h
-                self.sexdi = s
-            else:
+            traits = [v, h, s]           
+            while v + h + s < valmin or v + h + s > valmax:
+                time.sleep(0.2)
+                #adjust TODO
+                xv = rand(-1, 1)
+                xh = rand(-1, 1)
+                xs = rand(-1, 1)
+                #use invers on some of th traits
+                v = abs(mv +(xv*sv))
+                h = abs(mh +(xh*sh))
+                s = abs(ms +(xs*ss))
                 traits = [v, h, s]
-                temp = random.randint(0,2)
-                alt = val - traits[(temp+1)%3] - traits[(temp+2)%3]
-                while alt <= 0:
-                    xv = rand(-1, 1)
-                    xh = rand(-1, 1)
-                    xs = rand(-1, 1)
-                    v = abs(mv +(xv*sv))
-                    h = abs(mh +(xh*sh))
-                    s = abs(ms +(xs*ss))               
-                    traits = [v, h, s]
-                    temp = random.randint(0,2)
-                    alt = val - traits[(temp+1)%3] - traits[(temp+2)%3]
-                self.v = v
-                self.hungi = 1/h
-                self.sexdi = s 
-                #sum of parameters can't be more than val
+                temp = random.randint(0, 2)
+                if v + h + s < valmin:
+                    traits[temp] = valmin - traits[(temp+2)%3] -traits[(temp+1)%3]
+              
+                if v + h + s > valmax:
+                    traits[temp] = valmax - traits[(temp+2)%3] -traits[(temp+1)%3]
+             
+                if traits[temp] <= 0:
+                    v, h, s = 4823744397, 4739473874, 4782374823974 
+            self.v = v
+            self.hungi = 1/h
+            self.sexdi = s
 
         def resetFuckery(self):
             if self.fuckedAlready > 0:
