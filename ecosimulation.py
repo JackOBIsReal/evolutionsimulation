@@ -32,7 +32,7 @@ parser.add_argument('-fc', dest='foxCount', action='store', default=20, help='se
 
 args = parser.parse_args()
 
-args.tarierung_mh = float(args.tarierung_sens)
+args.tarierung_mh = float(args.tarierung_mh)
 args.tarierung_ms = float(args.tarierung_ms)
 args.tarierung_mv = float(args.tarierung_mv)
 args.tarierung_sens = float(args.tarierung_sens)
