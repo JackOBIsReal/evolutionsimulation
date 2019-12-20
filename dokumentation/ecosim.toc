@@ -9,8 +9,8 @@
 \contentsline {subsubsection}{\numberline {1.3.5}Andere Methoden}{4}
 \contentsline {subsection}{\numberline {1.4}Frontend (Jacob)}{4}
 \contentsline {section}{\numberline {2}Die Analyse}{5}
-\contentsline {subsection}{\numberline {2.1}Theorethisch}{5}
-\contentsline {subsection}{\numberline {2.2}Praktisch}{6}
-\contentsline {section}{\numberline {3}Verbesserungsmoeglichkeiten (Jonas)}{7}
+\contentsline {subsection}{\numberline {2.1}Theorethisch (Jonas)}{5}
+\contentsline {subsection}{\numberline {2.2}Praktisch (Jacob)}{6}
+\contentsline {section}{\numberline {3}Verbesserungsm\IeC {\"o}glichkeiten (beide)}{7}
 \contentsline {section}{\numberline {4}Anwendungen}{7}
-\contentsline {section}{\numberline {5}Fazit}{7}
+\contentsline {section}{\numberline {5}Fazit (beide)}{7}
