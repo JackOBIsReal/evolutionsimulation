@@ -3,6 +3,32 @@
 \usepackage[margin=0.8in]{geometry}
 \usepackage[utf8]{inputenc}
 \addtolength{\topmargin}{-.175in}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+language=python,
+aboveskip=3mm,
+belowskip=3mm,
+showstringspaces=false,
+columns=flexible,
+basicstyle={\small\ttfamily},
+numbers=none,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=3
+}
+
+
 \author{{\Large Jonas Berggren, Jacob Maxton}}
 \font\myfont=cmr12 at 30pt
 \title{{\myfont Ökosystemsimulation}}
@@ -17,69 +43,89 @@ Die Simulation basiert auf Objektorientierter Programmierung und simuliert die W
 \tableofcontents
 \newpage
 \section{Die Simulation}
- \subsection{Algemeines zu Objektorientierter Programmierung und numerischen Simulationen(Jonas)}
-Objektorientierte Programmierung bezeichnet das Programieren mit Hilfe so genannter Klassen und Objekte.
+ \subsection{Objektorientierte Programmierung und numerischen Simulationen(Jonas)}
+Objektorientierte Programmierung bezeichnet das Programmieren mit Hilfe so genannter Klassen und Objekte.
 Ein Objekt oder eine Instanz einer Klasse ist beispielsweise ein Individuum des Typs Kaninchen.
-In dem Beispielwaere die Klasse die kaninchen im allgemeinen.
-Eine Klasse kann man sich vorstellen wie Methodenkarten in denen eine Reiken von Informationen gespeichert sind.
+In dem Beispiel waere die Klasse die Kaninchen im allgemeinen.
+Klassen kann man sich vorstellen wie Methodenkarten, in denen eine Reihe von Informationen gespeichert sind.
 Diese koennen Instanzvariablen oder Methoden sein.
 Instanzvariablen sind Variablen die jede Instanz traegt.
 Methoden sind Funktionen oder Anweisungen die jede Instanz der Klasse ausfuehren kann.
+Klassen haben ausserdem Hierarchien.
+Eine Instanz einer sogenannten Unterklasse hat automatisch alle Methoden der uubergeordneten Klasse.
+Im unserer Simulation sind die Klassen \colorbox{gray!40}{Rabbit} und
+\colorbox{gray!40}{Fox} Unterklassen zu \colorbox{gray!40}{Animal}.
+Somit erben sie alle Methoden und variablen von \colorbox{gray!40}{Animal}.
 
-Bei numerischen Simulationen wird ein Szenario aus der Reellen Welt durch eine Computer simulation nachgestellt,
+Bei numerischen Simulationen wird ein Szenario aus der Reellen Welt durch eine Computersimulation nachgestellt.
 Dabei wird das System zum Zeitpunkt t betrachtet.
-Aufgrundlage dessen wird wird der Zustand des Systems zum Zeitpunkt t + h berchnet.
-dabei gilt je kleiner h desto genauer ist die simulation,
+Auf Grundlage dessen wird der Zustand des Systems zum Zeitpunkt t + h berechnet.
+Dabei gilt je kleiner h desto genauer ist die Simulation.
 Alle aenderungen werden angewand und der Prozess wird wiederholt bis der gesamte Zeitraum Simuliert wurde den es zu betrachten gilt.
 Dies ist nuetzlich um die Gultigkeit von Modellen zu pruefen oder z.b. die Stabilitaet des betrachteten Systems zu testen.
 \subsection{Konzept der Simulation(Jonas)}
 In der Simulation werden Pflanzen Kaninchen und Fuechse simuliert.
-Jedes Tier ist entweder eine Instanz der Klasse Fox oder Rabbit, die jeweils Unterklassen der Klasse Animal sind.
-In Animal sind alle Methoden gespeichert, die fuer Kaninchen und Fuechse identisch ausgefuehrt werden, wie der Konstruktor init oder movetargeted zu gezielten bewegen.
-Methoden die fuer Fuechse und kaninchen unterschiedlcih sind, sind in den Jeweiligen unterklassen gespeichert.
+Jedes Tier ist entweder eine Instanz der Klasse \colorbox{gray!40}{Fox} oder
+\colorbox{gray!40}{Rabbit}, die jeweils Unterklassen der Klasse
+\colorbox{gray!40}{Animal} sind.
+In Animal sind alle Methoden gespeichert, die fuer Kaninchen und Fuechse
+identisch ausgefuehrt werden, wie der Konstruktor
+\colorbox{gray!40}{\_\_init\_\_} oder \colorbox{gray!40}{movetargeted} zu gezielten bewegen.
+Methoden die fuer Fuechse und Kaninchen unterschiedlich sind, sind in den
+jeweiligen Unterklassen gespeichert.
 Diese sind z.b. findtarget zum finden aller potentiellen Ziele.
 Auf die unterschiedlcihen Instanzvariablen und Methoden wird aber in Kapitel \ref{methoden} weiter eingegangen.
 Alle Tiere haben eine kreisförmiges Sichtfeld, was nicht die komplette Karte abdeckt.
 Sie haben alle ein, mit der Zeit zunehmendes, Bedürfnis sich fortzupflanzen und zu essen.
 Alle Bedürfnis werden bei deren Erfüllung verringert.
 Wird der Hunger zu stark kann das Tier verhungern und sterben.
-Ausserdem kann ein Tier zu jedem mit einer Wahrscheinlichkeit sterben die vom alter abhaengig ist.
-Kaninchen essen pflanzen und Füchse essen Kaninchen, wobei gegessen Kaninche sterben.
+Ausserdem kann ein Tier zu jedem Zeitpunkt sterben, mit einer Wahrscheinlichkeit sterben die vom alter abhaengig ist.
+Kaninchen essen pflanzen und Füchse essen Kaninchen, wobei gegessen Kaninchen sterben.
 Kaninchen koennen vor Fuechsen fluechten die sich innerhalb des Sichtfelds befinden.
 
 \subsection{Methoden(Jonas)}
 \label{methoden}
 \subsubsection{Aussuchen eines Ziels}
-Dies wird durch die Methode findtarget geregelt, die aus der Hauptschleife aufgerufen wird.
-findtarget ist sowohl eine Methode der Klasse Fox als auch der Klasse Rabbit.
-Dort sind sie aber unterschiedlich definiert dar fuechse sich anders verhalten sollen als Kaninchen.
-Jedes Tier speichert alle Objekte die sich innerhalb des Sichtradius self.sens befinden in einer Liste ab.
+Dies wird durch die Methode \colorbox{gray!40}{findtarget} geregelt, die aus der Hauptschleife aufgerufen wird.
+\colorbox{gray!40}{findtarget} ist sowohl eine Methode der Klasse
+\colorbox{gray!40}{Fox} als auch der Klasse \colorbox{gray!40}{Rabbit}.
+Dort sind sie aber unterschiedlich definiert dar Fuechse sich anders verhalten sollen als Kaninchen.
+Jedes Tier speichert alle Objekte die sich innerhalb des Sichtradius
+\colorbox{gray!40}{self.sens} befinden in einer Liste ab.
 
 Anschliessend wird geprueft welches Ziel angesteuert werden soll.
 Dazu wird aus jeder Liste das naechste Element gesucht.
 Wenn ein Kaninchen ein Fuchs sieht hat die Flucht immer oberste Priorität.
-Der Fuchs wir anwisiert un der Bewgungsveklor wird mit -1 multipliziert
-danach wird gepueft ob Hunger oder Libodo staerker wirkt und demnach wir entschieden ob das naechste essen oder naechste partner anwisiert wird.
+Der Fuchs wir anvisiert und der Bewegungsvektor wird mit -1 multipliziert.
+Danach wird geprueft ob Hunger oder Libodo staerker wirkt und demnach wir
+entschieden ob das naechste essen oder der naechste Partner anvisiert wird.
 
 \subsubsection{Bewegung}
-Die Bewegung der Tiere wird durch die Methoden movetargeted und moverandom definiert.
-Jedes Tier hat zwei Arten wie es sich fortbewegn kann.
-Wenn es ein bestimmtes Ziel hat, wird movetargeted aufgerufen, und das Tier Bewegt sich entlang des Vektors von der eigenen Position zum Ziel.
+Die Bewegung der Tiere wird durch die Methoden \colorbox{gray!40}{movetargeted}
+und \colorbox{gray!40}{moverandom} definiert.
+Jedes Tier hat zwei Arten wie es sich fortbewegen kann.
+Wenn es ein bestimmtes Ziel hat, wird \colorbox{gray!40}{movetargeted}
+aufgerufen, und das Tier bewegt sich entlang des Vektors von der eigenen Position zum Ziel.
 Dabei ist der Bewegungsvektor auf die Bewegungsgeschwindigkeit normiert.
-Wenn kein Ziel in Sicht ist, wird moverandom aufgerufen, und sie bewegen sich zufällig.
-Dabei wird die Methode Collision jedes mal aufgerufen.
-Diese verhindert das Tiere aus der Katre rauslaufen.
+Wenn kein Ziel in Sicht ist, wird \colorbox{gray!40}{moverandom} aufgerufen, und sie bewegen sich zufällig.
+Dabei wird die Methode \colorbox{gray!40}{collision} jedes mal aufgerufen.
+Diese verhindert das Tiere aus der Karte raus laufen.
 \subsubsection{Fortpflanzung und Mutation}
 Haben sich zwei gefunden wird der Liste der Tiere eine neue Instanz der Klasse hinzugefügt.
 Bei den mutierbaren Eigenschaften wird der Durchschnitt aus den jeweiligen Werten der Eltern als Mittelwert angenommen.
 Der Wert des Kindes weicht weicht um x von diesen Durchschnitt ab, wobei x eine zufallige Zahl zwischen u und v ist
 
-Die eltern speichern sich gegenseitig als ehemalige Parnter ab und betrachten sich anschließen für eine Festgelegte Frist nicht mehr als mögliche Patrner. Ausserdem koennen sich die Eltern prinzipiell fuer eine Festgelegte Fist nicht weiter fortpflanzen.
+Die Eltern speichern sich gegenseitig als ehemalige Partner ab und betrachten
+sich anschließen für eine festgelegte Frist nicht mehr als mögliche potentielle
+Partner. Ausserdem koennen sich die Eltern prinzipiell fuer eine Festgelegte Frist nicht weiter fortpflanzen.
 \subsubsection{Tod}
 Tiere koennen auf drei untertschiedlichen Arten sterben.
-Sie koennen verhungern, sie koennen durch die Altersabhaegige Funktion sterben oder kaninchen koennen verhungern.
-Dies wird durch die Methoden starve, die unf eat geregelt.
-Die Methoden stave und die werden bei jeder Iteration afgerufen, und eat wenn ein Kaninchen gefressen wird.
+Sie koennen verhungern, sie koennen durch die Altersabhaengige Funktion sterben
+oder Kaninchen koennen gefressen werden.
+Dies wird durch die Methoden \colorbox{gray!40}{starve}, \colorbox{gray!40}{die}
+und \colorbox{gray!40}{eat} geregelt.
+Die Methoden \colorbox{gray!40}{starve} und \colorbox{gray!40}{die} werden bei
+jeder Iteration aufgerufen, und \colorbox{gray!40}{eat} wenn ein Kaninchen gefressen wird.
 %starve
 
 Die Todeswahrscheinlichkeitsdichte wird durch eine Funktion beschrieben nach dem Muster:
@@ -88,36 +134,41 @@ Die Todeswahrscheinlichkeitsdichte wird durch eine Funktion beschrieben nach dem
     %val = 0.0000001*(e**(-1.0*(self.age)+4.8)+20.0*self.age-4.0)
 \end{equation}
 t entspricht dem Alter fuer $t \in \mathbb{R}_{>0}$  und a bis d sind Konstanten.
-Durch so eine Funktion ich P fuer ein kleines t relativ gross.
-P erreicht im positiven bereich ein Minimum und wachst dan aproximativ linear an.
-Dies fast Kindersterblichkeit und alterschwaeche in ein Funktion zusammen.
+Durch so eine Funktion ist P fuer ein kleines t relativ gross.
+P erreicht im positiven Wertebereich ein Minimum und waechst dann approximativ linear an.
+Dies fasst Kindersterblichkeit und Alterschwaeche in ein Funktion zusammen.
 
-Beim sterben durch gegessen werden loescht der fuchs die gegessene isntanz aus der Liste der Tiere.
+Beim sterben durch gegessen werden loescht der Fuchs die gegessene Instanz aus der Liste der Tiere.
 \subsubsection{Andere Methoden}
-Hinzu kommen noch weiter Hifsmethoden wie z.b. distance die den Abstand zwisch self und eine Beliebigen Punkt berechnet.
-Diese sind jedoch fuer das allgemeine verstaendniss unsere Abreit nicht essentiell.
+Hinzu kommen noch weiter Hifsmethoden wie z.b. \colorbox{gray!40}{distance}, die
+den Abstand zwischen self und einem beliebigen Punkt berechnet.
+Diese sind jedoch fuer das allgemeine Verstaendniss unsere Abreit nicht essentiell.
 \subsection{Frontend (Jacob)}
 %hier schreibst du wie du das gemacht hast
 %flags und pygame
-\subsection{Tarieren der Werte}
+\subsection{Tarieren der Werte(Jacob)}
 %hier schreibst du wie du das gemacht hast
 \section{Die Analyse}
-\section{Verbesserungsmoeglichkeiten}
+\section{Verbesserungsmoeglichkeiten (Jonas)}
 Eine Moeglichkeit das Programm zu verbessern waere ein sogenanntes Gridsystem zu implementieren.
 Dabei wird das Feld in mehrere Subfelder unterteilt.
 Die Objekte werden in einer Matrix gespeichert wobei jeder Index der Matrix eine Subfeld zugeordnet ist.
-Das bietet den Vorteil, dass die Tiere bei Jeder Iteration nicht mehr die Die position aller Objekte abfragen muessen, sondern nur die der Objekte die sich im selben bzw. in einem der Felder befinden die mit dem Schtkreis ueberlappen.
-Somit kann die laufzeit pro Iteration stark reduziert werden.
+Das bietet den Vorteil, dass die Tiere bei Jeder Iteration nicht mehr die Die
+Position aller Objekte abfragen muessen, sondern nur die der Objekte die sich im
+selben bzw. in einem der Felder befinden, die mit dem Sichtkreis ueberlappen.
+Somit kann die Laufzeit pro Iteration stark reduziert werden.
 
 Asserdem kann eine andere, schnellere Programmiersprache verwendet werden.
-Fuer Unfangreiche wissenschaftliche Anwendungen kann eine erweiterte Version eines solchen Programm auf staerkeren Computern ausgefuehrt werden.
+Fuer Umfangreiche wissenschaftliche Anwendungen kann eine erweiterte Version
+eines solchen Programms auf staerkeren Computern ausgefuehrt werden.
 \section{Anwendungen}
-Eine Umfanreichere Simulation dieser Art koennte nuetzlichsein um die Auswirkungen von Menschlichem Eingriff in oekosysteme wie Klimaerwaermung, Lebensraum veraendungen oder austerben einer Art abzuschaetzen.
-Dies koennte nuetzlich sein um notwendigkeit und Dringlichkeit von Umwelt Massnahmem abzuschaetzen.
+Eine Umfangreichere Simulation dieser Art koennte nuetzlich sein um die Auswirkungen von Menschlichem Eingriff in oekosysteme wie Klimaerwaermung, Lebensraum veraendungen oder austerben einer Art abzuschaetzen.
+Dies koennte nuetzlich sein um Notwendigkeit und Dringlichkeit von Umwelt Massnahmem abzuschaetzen.
 \section{Fazit}
-Wir haben mit Hilfe objektientierter Programmierung eine Vereinfachte Simulation eines OEkosysteme entwickelt im dem wir uns auf die Wechselwirkung zwischen zwei Tierarten konzentriert haben.
+Wir haben mit Hilfe Objektientierter Programmierung eine Vereinfachte Simulation
+eines OEkosysteme entwickelt indem wir uns auf die Wechselwirkung zwischen zwei Tierarten konzentriert haben.
 Dabei sind wir auf unterschiedliche Schwierigkeiten gestossen.
-zuerst mussten wir entscheiden wie genau unsere Simulation sein soll.
-Anschliesend war es sehr schwierig all Willkuerrlch gewaehlten Parameter so zu beziffern, dass keine der Arten zu schnell ausstrirbt.
+Zuerst mussten wir entscheiden wie genau unsere Simulation sein soll.
+Anschliesend war es sehr schwierig all Willkuerrlich gewaehlten Parameter so zu beziffern, dass keine der Arten zu schnell ausstrirbt.
 Dabei haben wir festgestellt wie fragil auch so ein einfaches OEkosystem sein kann.
 \end{document}

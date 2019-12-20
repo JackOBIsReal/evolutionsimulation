@@ -1,15 +1,15 @@
 \contentsline {section}{\numberline {1}Die Simulation}{2}
-\contentsline {subsection}{\numberline {1.1}Algemeines zu Objektorientierter Programmierung und numerischen Simulationen}{2}
-\contentsline {subsection}{\numberline {1.2}Knzept der Simulation}{2}
-\contentsline {subsection}{\numberline {1.3}Methoden}{2}
+\contentsline {subsection}{\numberline {1.1}Objektorientierte Programmierung und numerischen Simulationen(Jonas)}{2}
+\contentsline {subsection}{\numberline {1.2}Konzept der Simulation(Jonas)}{2}
+\contentsline {subsection}{\numberline {1.3}Methoden(Jonas)}{2}
 \contentsline {subsubsection}{\numberline {1.3.1}Aussuchen eines Ziels}{2}
 \contentsline {subsubsection}{\numberline {1.3.2}Bewegung}{3}
 \contentsline {subsubsection}{\numberline {1.3.3}Fortpflanzung und Mutation}{3}
 \contentsline {subsubsection}{\numberline {1.3.4}Tod}{3}
 \contentsline {subsubsection}{\numberline {1.3.5}Andere Methoden}{3}
 \contentsline {subsection}{\numberline {1.4}Frontend (Jacob)}{4}
-\contentsline {subsection}{\numberline {1.5}Tarieren der Werte}{4}
+\contentsline {subsection}{\numberline {1.5}Tarieren der Werte(Jacob)}{4}
 \contentsline {section}{\numberline {2}Die Analyse}{4}
-\contentsline {section}{\numberline {3}Verbesserungsmoeglichkeiten}{4}
+\contentsline {section}{\numberline {3}Verbesserungsmoeglichkeiten (Jonas)}{4}
 \contentsline {section}{\numberline {4}Anwendungen}{4}
 \contentsline {section}{\numberline {5}Fazit}{4}
