@@ -309,7 +309,8 @@ try:
                     starveCount[1] += 1
                 log("starve" + str(self.__class__.__name__))
                 animals.remove(self) # i used the stones to destroy the stones
-#end Jacob===============================================================#begin Jonas============================================================
+#end Jacob===============================================================
+#begin Jonas============================================================
 
         #eat palnst or rabbits
         def eat(self):
@@ -517,11 +518,8 @@ try:
                     ageCount[1] += 1
                 log("age" + str(self.__class__.__name__))
                 animals.remove(self) # i used the stones to destroy the stones
-    #you didn't comment either
-    #well, you got a point...
-
     #vorbereitung echte Simulation
-    #edn Jonas=======================================================
+    #end Jonas=======================================================
     #begin jacob======================================================
     for i in range(int(args.plantCount)):
         genplant()
